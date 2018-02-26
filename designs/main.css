@@ -1,0 +1,37 @@
+body {
+    background-color: #898ec7;      
+}
+.justify-content-center {
+    margin-top: 60px;
+}
+.justify-content-center .card {
+    background: rgba(255, 255, 255,0.8);
+    box-shadow: rgba(0, 0, 0, 0.3)20px 20px
+20px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: 0 none;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+ 
+.btn:focus, .btn:active:focus, .btn.active:focus {
+    outline: 0 none;
+}
+ 
+.btn-primary {
+    background: #4d4b4b;
+    color: #ffffff;
+}
+ 
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open > .dropdown-toggle.btn-primary {
+    background: #898ec7;
+}
+ 
+.btn-primary:active, .btn-primary.active {
+    background: #007299;
+    box-shadow: none;
+}
