@@ -35,3 +35,15 @@ body {
     background: #007299;
     box-shadow: none;
 }
+
+.a href{
+    background: #4d4b4b;
+    color: #ffffff;
+}
+.a:hover, .a:focus, .a:active, .a.active, .open > .dropdown-toggle.a {
+    background: #898ec7;
+}
+.a:active, .a.active {
+    background: #4d4b4b;
+    box-shadow: none;
+}
