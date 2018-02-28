@@ -1,5 +1,6 @@
 body {
-    background-color: #898ec7;      
+    background-color: #898ec7;
+    background-image: url(Connectivity1.jpg);     
 }
 .justify-content-center {
     margin-top: 60px;
@@ -32,7 +33,7 @@ body {
 }
  
 .btn-primary:active, .btn-primary.active {
-    background: #007299;
+    background: #898ec7;
     box-shadow: none;
 }
 
