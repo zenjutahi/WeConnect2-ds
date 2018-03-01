@@ -1,6 +1,6 @@
 body {
-    background-color: #898ec7;
-    background-image: url(Connectivity1.jpg);     
+    background-color: transparent;
+    background-image: url("../images/connected2.png");     
 }
 .justify-content-center {
     margin-top: 60px;
@@ -29,11 +29,11 @@ body {
 }
  
 .btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open > .dropdown-toggle.btn-primary {
-    background: #898ec7;
+    background: #515bcc;
 }
  
 .btn-primary:active, .btn-primary.active {
-    background: #898ec7;
+    background: #515bcc;
     box-shadow: none;
 }
 
@@ -42,9 +42,14 @@ body {
     color: #ffffff;
 }
 .a:hover, .a:focus, .a:active, .a.active, .open > .dropdown-toggle.a {
-    background: #898ec7;
+    background: #515bcc;
 }
 .a:active, .a.active {
     background: #4d4b4b;
     box-shadow: none;
 }
+.try-back{
+    color:#ffffff;
+    background-image: url("../images/connected2.png")
+    
+  }
