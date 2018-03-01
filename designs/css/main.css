@@ -29,11 +29,11 @@ body {
 }
  
 .btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open > .dropdown-toggle.btn-primary {
-    background: #515bcc;
+    background: #d5b813;
 }
  
 .btn-primary:active, .btn-primary.active {
-    background: #515bcc;
+    background: #d5b813;
     box-shadow: none;
 }
 
@@ -42,7 +42,7 @@ body {
     color: #ffffff;
 }
 .a:hover, .a:focus, .a:active, .a.active, .open > .dropdown-toggle.a {
-    background: #515bcc;
+    background: #d5b813;
 }
 .a:active, .a.active {
     background: #4d4b4b;
