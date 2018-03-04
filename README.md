@@ -3,13 +3,13 @@
 
 ## Getting Started
 My project is broken down into 4 parts. 
-a) Starting with the User Interface designs for the web application using Bootstrap and Css
-b) Second section is setting up API endpoints to access the web application using Flask Restful API
-c) Third section is Securing the API endpoints and intergrating the web application with database
-d) The fouth and final section is intergaration of the frontend, to be implimented using React/Redux
+*a) Starting with the User Interface designs for the web application using _Bootstrap and Css_
+*b) Second section is setting up API endpoints to access the web application using _Flask Restful API_
+*c) Third section is Securing the API endpoints and intergrating the web application with database
+*d) The fouth and final section is intergaration of the frontend, to be implimented using _React/Redux_
 
 ### Prerequisites
-Python 3.6
-Virtual environment
-Flask
-Pylint
+*Python 3.6
+*Virtual environment
+*Flask
+*Pylint
