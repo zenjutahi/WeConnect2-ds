@@ -37,8 +37,8 @@ def register():
 def login():
     data = request.get_json()
 
-    user_dict = User.users.items()
-    existing_user = {k:v for k, v in user_dict if data['email'] in v['email']}
+    users_dict = User.users.items()
+    existing_user = {k:v for k, v in users_dict if data['email'] in v['email']}
     if existing_user:
         valid_user = [v for v in existing_user.values() if check_password_hash(v
                         ['password'], data['password'])]
@@ -56,3 +56,12 @@ def login():
 
     else:
         return jsonify({'message': 'Not registered user'})
+
+@auth.route('/logout')
+def logout():
+    global logged_in
+    logged_in = False
+
+    session.pop('user_id', None)
+
+    return jsonify({'message' : 'Succesfully logged out'})
