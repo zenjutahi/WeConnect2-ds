@@ -64,4 +64,4 @@ def logout():
 
     session.pop('user_id', None)
 
-    return jsonify({'message' : 'Succesfully logged out'})
+    return jsonify({'message' : 'Succesfully logged out'}), 200
