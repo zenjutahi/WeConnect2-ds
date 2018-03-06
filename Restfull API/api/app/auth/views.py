@@ -17,7 +17,7 @@ def register():
     users_dict = User.users.items()
     existing_user = {k:v for k, v in users_dict if data['email'] in v['email']}
     if existing_user:
-        return jsonify({'message':'This email is registered, login instead'})
+        return jsonify({'message':'This email is registered, login instead'}), 404
 
 
     # If email not registred, create user account
@@ -28,7 +28,7 @@ def register():
         if data['email'] in value['email']:
             session['user_id'] = key
 
-    return jsonify({'message' : 'New user Succesfully created'})
+    return jsonify({'message' : 'New user Succesfully created'}), 201
 
 
 #user_id=str(uuid.uuid4()),
@@ -49,13 +49,13 @@ def login():
             for key, value in users_dict:     # user gets id, eg 3
                 if data['email'] in value['email']:
                     session['user_id'] = key
-            return jsonify({'message' : 'User valid succesfully logged in'})
+            return jsonify({'message' : 'User valid and succesfully logged in'}), 200
 
         else:
-            return jsonify({'mesage': 'Wrong password'})
+            return jsonify({'message': 'Wrong password'}), 404
 
     else:
-        return jsonify({'message': 'Not registered user'})
+        return jsonify({'message': 'Not registered user'}), 400
 
 @auth.route('/logout')
 def logout():
