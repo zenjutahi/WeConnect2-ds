@@ -5,6 +5,7 @@ from config import app_config
 import jwt
 import datetime
 import uuid
+from functools import wraps
 from . import auth
 from ..models import User
 from app import create_app
@@ -15,6 +16,31 @@ global logged_in
 logged_in = False
 
 app = create_app(config_name='development')
+
+
+
+
+
+def token_required(func):
+    @wraps(func)
+    def decorated(*args, **kwargs):
+        token = None
+
+        if 'x-access-token' in request.headers:
+            token = request.headers['x-access-token']
+
+        if not token:
+            return jsonify({'message': 'Token is missing!'}), 401
+
+        try:
+            data = jwt.decode(token, app.config['SECRET_KEY'])
+            users_dict = User.users.items()
+            current_user = {ke:va for ke, va in users_dict if data['email'] in va['email']}
+        except:
+            return jsonify({'message': 'Token is invalid!'}), 401
+        return func(current_user, *args, **kwargs)
+
+    return decorated
 
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
@@ -66,7 +92,8 @@ def login():
         return jsonify({'message': 'Not registered user'}), 400
 
 @auth.route('/logout')
-def logout():
+@token_required
+def logout(current_user):
     global logged_in
     logged_in = False
 
