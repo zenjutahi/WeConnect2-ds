@@ -49,6 +49,12 @@ def register_biz():
 @busz.route('/businesses/<int:buzId>', methods=['GET', 'POST', 'DELETE'])
 def editBusiness(buzId):
 
-    business_dict = Business.businesslist.items()
+    business_dict = Business.businesslist
     businessIds = business_dict.keys()
-    if 
+    if buzId not in businessIds:
+        return jsonify({'message':'Bussniess Id unknown'})
+    if request.method == 'DELETE':
+        for businessId in businessIds:
+            if businessId == buzId:
+                del business_dict[buzId]
+                return jsonify({'message': 'Business successfully deleted'})
