@@ -1,0 +1,4 @@
+{
+  "api/tests/test_auth.py::UserAuthTestCase::test_user_login": true,
+  "api/tests/test_auth.py::UserAuthTestCase::test_user_registration": true
+}
