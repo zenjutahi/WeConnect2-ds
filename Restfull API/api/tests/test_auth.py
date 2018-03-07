@@ -22,9 +22,12 @@ class UserAuthTestCase(unittest.TestCase):
                     data=json.dumps(dict(email="jeff@gmail.com",username="jefftest",
                                 password="jeffpass")), content_type="application/json")
 
-        self.app.post("/auth/login",
-                        data=json.dumps(dict(email="jeff@gmail.com",password="jeffpass")),
+        self.token = self.app.post("/auth/login",
+                        data = json.dumps(dict(email="jeff@gmail.com",password="jeffpass")),
                                          content_type="application/json")
+        print(self.token.data)
+
+        
 
     def test_user_registration(self):
         """ Test API can register a user"""
@@ -85,6 +88,17 @@ class UserAuthTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         response_msg = json.loads(response.data.decode("UTF-8"))
         self.assertIn("logged out", response_msg["message"])
+
+
+    # def test_check_if_business_is_registrerd(self):
+    #     """ Test API can check if user rejects an already registered business"""
+    #     response = self.app.post("/auth/login",
+    #                     data=json.dumps(dict(email="jeffnot@gmail.com",password="jeffpassnot")),
+    #                                      content_type="application/json")
+
+    #     self.assertEqual(response.status_code, 400)
+    #     response_msg = json.loads(response.data.decode("UTF-8"))
+    #     self.assertIn("Not registered", response_msg["message"])         
 
 
 if __name__ == "__main__":

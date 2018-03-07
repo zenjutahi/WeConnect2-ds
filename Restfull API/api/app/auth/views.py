@@ -1,6 +1,6 @@
-from flask import flash, request, session, jsonify, current_app
+from flask import flash, request, session, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
-from config import app_config
+
 
 import jwt
 import datetime
@@ -45,18 +45,23 @@ def token_required(func):
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
     data = request.get_json()
-    # Check if email already registred
+
+    if data['email'] == "" or data["password"] == "" :
+        return jsonify({'message': 'You need email and password to login'}), 403
+
+    """ Check if email already registred """
     users_dict = User.users.items()
-    existing_user = {k:v for k, v in users_dict if data['email'] in v['email']}
+    existing_user = {ke:va for ke, va in users_dict if data['email'] in va['email']}
     if existing_user:
         return jsonify({'message':'This email is registered, login instead'}), 404
 
 
-    # If email not registred, create user account
+    """ If email not registred, create user account"""
     new_user = User(email=data['email'], username=data['username'], password=data['password'])
     new_user.create_user()
-
-    for key, value in users_dict:     # user gets id, eg 3
+    
+    """ Give user session """
+    for key, value in users_dict:     
         if data['email'] in value['email']:
             session['user_id'] = key
 
@@ -68,6 +73,8 @@ def register():
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     data = request.get_json()
+    if data['email'] == "" or data["password"] == "":
+        return jsonify({'message': 'You need both password and username to login'}), 403
 
     users_dict = User.users.items()
     existing_user = {ke:va for ke, va in users_dict if data['email'] in va['email']}
@@ -78,9 +85,11 @@ def login():
             global logged_in
             logged_in = True
 
-            for key, value in users_dict:     # user gets id, eg 3
+            """ Give user session """
+            for key, value in users_dict:     
                 if data['email'] in value['email']:
                     session['user_id'] = key
+
             token = jwt.encode({'email':data['email'], 'exp': datetime.datetime.utcnow()+
                                 datetime.timedelta(minutes=15)}, app.config['SECRET_KEY'])
             return jsonify({'message' : 'User valid and succesfully logged in','token': token.decode('UTF-8')}), 200 #
@@ -92,11 +101,18 @@ def login():
         return jsonify({'message': 'Not registered user'}), 400
 
 @auth.route('/logout')
-@token_required
-def logout(current_user):
+#@token_required      #current_user --- to be passed when using token
+def logout():
     global logged_in
     logged_in = False
 
     session.pop('user_id', None)
 
     return jsonify({'message' : 'Succesfully logged out'}), 200
+
+
+@auth.route('/reset-password')
+def reset_password():
+    pass
+
+
