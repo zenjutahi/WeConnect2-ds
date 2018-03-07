@@ -31,8 +31,8 @@ class User(object):
 
 
 class Business(object):
-    """ This is a class that gives artributes such as id, name, description 
-              to a business """
+    """ This is a class that gives artributes such as id, name, description and location
+                            to a business """
 
     buss_id = 0
     businesslist = {}
@@ -57,10 +57,10 @@ class Business(object):
         })
 
         return self.businesslist
-        
+
     @staticmethod
     def get_businesses_all():
-        """ to get all my business """
+        """ to get all my businesses """
         return Business.businesslist
 
 

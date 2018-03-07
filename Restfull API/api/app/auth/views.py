@@ -35,7 +35,7 @@ def token_required(func):
         try:
             data = jwt.decode(token, app.config['SECRET_KEY'])
             users_dict = User.users.items()
-            current_user = {ke:va for ke, va in users_dict if data['email'] in va['email']}
+            current_user = {ke:val for ke, val in users_dict if data['email'] in val['email']}
         except:
             return jsonify({'message': 'Token is invalid!'}), 401
         return func(current_user, *args, **kwargs)
@@ -51,7 +51,7 @@ def register():
 
     """ Check if email already registred """
     users_dict = User.users.items()
-    existing_user = {ke:va for ke, va in users_dict if data['email'] in va['email']}
+    existing_user = {ke:val for ke, val in users_dict if data['email'] in val['email']}
     if existing_user:
         return jsonify({'message':'This email is registered, login instead'}), 404
 
@@ -77,7 +77,7 @@ def login():
         return jsonify({'message': 'You need both password and username to login'}), 403
 
     users_dict = User.users.items()
-    existing_user = {ke:va for ke, va in users_dict if data['email'] in va['email']}
+    existing_user = {ke:val for ke, val in users_dict if data['email'] in val['email']}
     if existing_user:
         valid_user = [va for va in existing_user.values() if check_password_hash(va
                         ['password'], data['password'])]

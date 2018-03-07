@@ -19,15 +19,15 @@ class UserBusinessTestCase(unittest.TestCase):
         self.app = create_app(config_name="testing")
         self.app = self.app.test_client()
         self.app.post("/businesses/register",
-                    data=json.dumps(dict(name="A2z ICT Company Kenya",description="We Will Do Basic Web Functionalities In Django And Flask")),
-                                  content_type="application/json")
+                    data=json.dumps(dict(name="A2z ICT Company Kenya",description="We Will Do Basic Web Functionalities In Django And Flask",location = "Nairobi")),
+                                            content_type="application/json")
 
 
         
     def test_business_registration(self):
         """ Test API can register a a business"""
         response = self.app.post("/businesses/register",
-                        data=json.dumps(dict(name="Jeff Business Today",description="In case you are not sure on which package is .")),
+                        data=json.dumps(dict(name="Jeff Business Today",description="In case you are not sure on which package is .",location = "Nairobi")),
                                             content_type="application/json")
 
         self.assertEqual(response.status_code, 201)
@@ -38,8 +38,8 @@ class UserBusinessTestCase(unittest.TestCase):
     def test_weather_business_already_registered(self):
         """ Test API can check a registered user"""
         response = self.app.post("/businesses/register",
-                    data=json.dumps(dict(name="A2z ICT Company Kenya",description="We Will Do Basic Web Functionalities In Django And Flask.")),
-                                  content_type="application/json")
+                    data=json.dumps(dict(name="A2z ICT Company Kenya",description="We Will Do Basic Web Functionalities In Django And Flask.",location = "Nairobi")),
+                                        content_type="application/json")
 
         self.assertEqual(response.status_code, 404)
         response_msg = json.loads(response.data.decode("UTF-8"))

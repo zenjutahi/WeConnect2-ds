@@ -1,3 +1,7 @@
 {
-  "tests/test_auth.py::UserAuthTestCase::test_if_user_is_has_logged_out": true
+  "tests/test_auth.py::UserAuthTestCase::test_if_user_is_has_logged_out": true,
+  "tests/test_busz.py::UserBusinessTestCase::test_business_registration": true,
+  "tests/test_busz.py::UserBusinessTestCase::test_if_business_already_registered": true,
+  "tests/test_busz.py::UserBusinessTestCase::test_if_business_can_be_deleted": true,
+  "tests/test_busz.py::UserBusinessTestCase::test_weather_business_already_registered": true
 }
