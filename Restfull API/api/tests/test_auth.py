@@ -65,7 +65,7 @@ class UserAuthTestCase(unittest.TestCase):
                         data=json.dumps(dict(email="jeff@gmail.com",password="jeffpassxxx")),
                                          content_type="application/json")
 
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 403)
         response_msg = json.loads(response.data.decode("UTF-8"))
         self.assertIn("Wrong", response_msg["message"])      
 

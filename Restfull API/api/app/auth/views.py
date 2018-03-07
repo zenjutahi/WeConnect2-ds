@@ -1,14 +1,20 @@
-from flask import flash, url_for, request, session, Markup, jsonify
+from flask import flash, request, session, jsonify, current_app
 from werkzeug.security import generate_password_hash, check_password_hash
+from config import app_config
 
+import jwt
+import datetime
 import uuid
 from . import auth
 from ..models import User
+from app import create_app
 
 
 # Set var to check user login status
 global logged_in
 logged_in = False
+
+app = create_app(config_name='development')
 
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
@@ -38,9 +44,9 @@ def login():
     data = request.get_json()
 
     users_dict = User.users.items()
-    existing_user = {k:v for k, v in users_dict if data['email'] in v['email']}
+    existing_user = {ke:va for ke, va in users_dict if data['email'] in va['email']}
     if existing_user:
-        valid_user = [v for v in existing_user.values() if check_password_hash(v
+        valid_user = [va for va in existing_user.values() if check_password_hash(va
                         ['password'], data['password'])]
         if valid_user:
             global logged_in
@@ -49,10 +55,12 @@ def login():
             for key, value in users_dict:     # user gets id, eg 3
                 if data['email'] in value['email']:
                     session['user_id'] = key
-            return jsonify({'message' : 'User valid and succesfully logged in'}), 200
+            token = jwt.encode({'email':data['email'], 'exp': datetime.datetime.utcnow()+
+                                datetime.timedelta(minutes=15)}, app.config['SECRET_KEY'])
+            return jsonify({'message' : 'User valid and succesfully logged in','token': token.decode('UTF-8')}), 200 #
 
         else:
-            return jsonify({'message': 'Wrong password'}), 404
+            return jsonify({'message': 'Wrong password'}), 403
 
     else:
         return jsonify({'message': 'Not registered user'}), 400

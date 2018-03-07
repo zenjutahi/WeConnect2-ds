@@ -4,6 +4,7 @@ class Config(object):
     """
 
     # Put any configurations here that are common across all environments
+    
 
 class DevelopmentConfig(Config):
     """
@@ -11,6 +12,7 @@ class DevelopmentConfig(Config):
     """
 
     DEBUG = True
+    SECRET_KEY = 'mysupersecretkey'
 
 class TestingConfig(Config):
     """Configurations for Testing, with a separate test database."""
