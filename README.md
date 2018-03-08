@@ -16,17 +16,17 @@
 # Weconnect
  A platform that brings businesses and individuals together this is by creating awareness for businesses and gives the users the ability to write reviews about the businesses they have interacted with
 
-## Getting Started
-
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
 ### Prerequisites
 
 What things you need to install the software and how to install them
 
-```
+
 Give examples
-```
+* Python 3.6
+* Virtual environment
+* Flask
+* Pylint
 
 ### Installing
 
@@ -48,7 +48,7 @@ End with an example of getting some data out of the system or using it for a lit
 
 ## Running the tests
 
-Explain how to run the automated tests for this system
+Running Tests usin pytext
 
 ### Break down into end to end tests
 
@@ -72,9 +72,9 @@ Add additional notes about how to deploy this on a live system
 
 ## Built With
 
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
+* [Flask](http://flask.pocoo.org/) - The web framework used
+* [Flask Restfull](https://flask-restful.readthedocs.io/en/latest/) - Used to enable API
+* [Pytest](https://docs.pytest.org/en/latest/) - framework used for testing
 
 ## Contributing
 
@@ -82,11 +82,11 @@ Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c6
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
+We use [GitHub](https://github.com/) for versioning. For the versions available, see the [tags on this repository](https://github.com/zenjutahi/Weconnect/). 
 
 ## Authors
 
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
+* **Jeff Mutahi** - *Initial work* - [Zenjeff](https://github.com/zenjutahi)
 
 See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
 
@@ -96,7 +96,7 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Acknowledgments
 
-* Hat tip to anyone who's code was used
-* Inspiration
+* John 
+* Inspiration 
 * etc
 

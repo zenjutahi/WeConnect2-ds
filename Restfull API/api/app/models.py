@@ -31,8 +31,8 @@ class User(object):
 
 
 class Business(object):
-    """ This is a class that gives artributes such as id, name, description 
-              to a business """
+    """ This is a class that gives artributes such as id, name, description and location
+                            to a business """
 
     buss_id = 0
     businesslist = {}
@@ -57,11 +57,44 @@ class Business(object):
         })
 
         return self.businesslist
-        
+
     @staticmethod
     def get_businesses_all():
-        """ to get all my business """
+        """ to get all my businesses """
         return Business.businesslist
+
+
+class Review(object):
+    """ This is a class that gives artributes to a review """
+    review_id = 0
+    reviewlist = {}
+
+    def __init__(self, value, comments):
+        """ constructor to initialize class """
+        Review.review_id += 1 
+        self.value = value
+        self.comments = comments
+
+    def create_Review(self):
+        """ To create and store a review """
+        self.reviewlist.update({
+            self.review_id: {
+                'business_id': Business.buss_id,
+                'user_id': User.user_id,
+                'value': self.value,
+                'comments': self.comments
+                }
+        })
+
+        return self.reviewlist
+
+    def get_Review(self, business_id):
+        """ To get review for a business"""
+        reviews = self.reviewlist.items()
+        one_review = {ke:val for ke, val in reviews if val['business_id'] == business_id}
+        all_reviews.append(one_review)
+        return all_reviews
+
 
 
     

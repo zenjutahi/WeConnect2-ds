@@ -11,10 +11,10 @@ def create_app(config_name):
     from app import models
 
     from .auth import auth as auth_blueprint
-    app.register_blueprint(auth_blueprint, url_prefix='/auth')
+    app.register_blueprint(auth_blueprint, url_prefix='/api/auth')
 
-    from .busz import busz as busz_blueprint
-    app.register_blueprint(busz_blueprint, url_prefix='')
+    from .business import business as business_blueprint
+    app.register_blueprint(business_blueprint, url_prefix='/api' )
 
     return app
 
