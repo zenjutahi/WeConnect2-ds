@@ -18,7 +18,7 @@ class UserBusinessTestCase(unittest.TestCase):
     def setUp(self):
         self.app = create_app(config_name="testing")
         self.app = self.app.test_client()
-        self.app.post("/businesses",
+        self.app.post("/api/businesses",
                     data=json.dumps(dict(name="A2z ICT Company Kenya",description="We Will Do Basic Web Functionalities In Django And Flask",
                                             location = "Nairobi")),content_type="application/json")
 
@@ -26,7 +26,7 @@ class UserBusinessTestCase(unittest.TestCase):
         
     def test_business_registration(self):
         """ Test API can register a a business"""
-        response = self.app.post("/businesses",
+        response = self.app.post("/api/businesses",
                         data=json.dumps(dict(name="Jeff Business Today",description="In case you are not sure on which package is .",
                                             location = "Nairobi")),content_type="application/json")
 
@@ -37,7 +37,7 @@ class UserBusinessTestCase(unittest.TestCase):
 
     def test_weather_business_already_registered(self):
         """ Test API can check a registered business"""
-        response = self.app.post("/businesses",
+        response = self.app.post("/api/businesses",
                     data=json.dumps(dict(name="A2z ICT Company Kenya",description="We Will Do Basic Web Functionalities In Django And Flask.",
                                         location = "Nairobi")),content_type="application/json")
 

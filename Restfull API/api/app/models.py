@@ -64,4 +64,31 @@ class Business(object):
         return Business.businesslist
 
 
+class Review(object):
+    """ This is a class that gives artributes to a review """
+
+    review_id = 0
+    reviewlist = {}
+
+    def __init__(self, value, comments):
+        """ constructor to initialize class """
+
+        Review.review_id += 1 
+        self.value = value
+        self.comments = comments
+
+    def create_business(self):
+        """ To create and store a review """
+        self.reviewlist.update({
+            self.review_id: {
+                'business_id': Business.buss_id,
+                'user_id': User.user_id,
+                'value': self.value,
+                'comments': self.comments
+                }
+        })
+
+        return self.reviewlist
+
+
     

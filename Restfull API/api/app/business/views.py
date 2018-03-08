@@ -7,12 +7,12 @@ import datetime
 import uuid
 import json
 from functools import wraps
-from . import busz
+from . import business
 from ..models import User, Business
 
 
-@busz.route('/businesses', methods=['GET','POST'])
-def register_biz():
+@business.route('/businesses', methods=['GET','POST'])
+def registerBusiness():
     """ This is to register a business"""
     if request.method == 'POST':
 
@@ -32,13 +32,13 @@ def register_biz():
         new_biz = Business(name=data['name'], description=data['description'], location=data['location'])
         new_biz.create_business()
         """ get the last businesss """
-        current_biz_id = ((sorted(Business.businesslist.keys()))[-1])
-        biz = Business.businesslist[current_biz_id]['name']
+        current_business_id = ((sorted(Business.businesslist.keys()))[-1])
+        businessName = Business.businesslist[current_business_id]['name']
 
         return jsonify(
             {'message':'New business has been created',
-            'businesses': current_biz_id,
-            'biz': biz
+            'businesses': current_business_id,
+            'business name': businessName
             }), 201
 
     """ This is to get all businesses """
@@ -46,7 +46,7 @@ def register_biz():
     return jsonify(all_businesses)
 
 
-@busz.route('/businesses/<int:buzId>', methods=['GET', 'POST', 'DELETE'])
+@business.route('/businesses/<int:buzId>', methods=['GET', 'PUT', 'DELETE'])
 def editBusiness(buzId):
 
     business_dict = Business.businesslist
@@ -58,3 +58,26 @@ def editBusiness(buzId):
             if businessId == buzId:
                 del business_dict[buzId]
                 return jsonify({'message': 'Business successfully deleted'}), 202
+    elif request.method == 'PUT':
+        for businessId in businessIds:
+            if businessId == buzId:
+                data = request.get_json()
+                targetBusinessValues = business_dict[buzId]
+                for values in targetBusinessValues:
+                    targetBusinessValues['name'] = data['name']
+                    targetBusinessValues['description'] = data['description']
+                    targetBusinessValues['location'] = data['location']
+                    return jsonify({'New business': targetBusinessValues,
+                                    'message': 'Business Edited successfully'
+                                    }), 201
+
+    else:
+        for businessId in businessIds:
+            if businessId == buzId:
+                targetBusiness = business_dict[buzId]
+                return jsonify({'business': targetBusiness,
+                                'business Id': buzId,
+                                'message': 'Here is the searched business'
+                                
+                                }), 200
+    

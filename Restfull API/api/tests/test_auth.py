@@ -18,11 +18,11 @@ class UserAuthTestCase(unittest.TestCase):
     def setUp(self):
         self.app = create_app(config_name="testing")
         self.app = self.app.test_client()
-        self.app.post("/auth/register",
+        self.app.post("/api/auth/register",
                     data=json.dumps(dict(email="jeff@gmail.com",username="jefftest",
                                 password="jeffpass")), content_type="application/json")
 
-        self.token = self.app.post("/auth/login",
+        self.token = self.app.post("/api/auth/login",
                         data = json.dumps(dict(email="jeff@gmail.com",password="jeffpass")),
                                          content_type="application/json")
         print(self.token.data)
@@ -31,7 +31,7 @@ class UserAuthTestCase(unittest.TestCase):
 
     def test_user_registration(self):
         """ Test API can register a user"""
-        response = self.app.post("/auth/register",
+        response = self.app.post("/api/auth/register",
                         data=json.dumps(dict(email="jeff2@gmail.com",username="jefftest2",
                             password="jeffpass2")), content_type="application/json")
 
@@ -42,7 +42,7 @@ class UserAuthTestCase(unittest.TestCase):
 
     def test_user_already_registered(self):
         """ Test API can check a registered user"""
-        response = self.app.post("/auth/register",
+        response = self.app.post("/api/auth/register",
                         data=json.dumps(dict(email="jeff@gmail.com",username="jefftest",
                             password="jeffpass")), content_type="application/json")
 
@@ -53,7 +53,7 @@ class UserAuthTestCase(unittest.TestCase):
 
     def test_user_login(self):
         """ Test API can login a user"""
-        response = self.app.post("/auth/login",
+        response = self.app.post("/api/auth/login",
                         data=json.dumps(dict(email="jeff@gmail.com",password="jeffpass")),
                                          content_type="application/json")
 
@@ -64,7 +64,7 @@ class UserAuthTestCase(unittest.TestCase):
 
     def test_user_login_with_wrong_password_or_username(self):
         """ Test API can check if user used wrong password"""
-        response = self.app.post("/auth/login",
+        response = self.app.post("/api/auth/login",
                         data=json.dumps(dict(email="jeff@gmail.com",password="jeffpassxxx")),
                                          content_type="application/json")
 
@@ -74,7 +74,7 @@ class UserAuthTestCase(unittest.TestCase):
 
     def test_check_user_is_registrerd(self):
         """ Test API can check if user is registered"""
-        response = self.app.post("/auth/login",
+        response = self.app.post("/api/auth/login",
                         data=json.dumps(dict(email="jeffnot@gmail.com",password="jeffpassnot")),
                                          content_type="application/json")
 
@@ -84,7 +84,7 @@ class UserAuthTestCase(unittest.TestCase):
 
     def test_if_user_has_logged_out(self):
         """ Test API can check if user is logged out"""
-        response = self.app.get("/auth/logout")
+        response = self.app.get("/api/auth/logout")
         self.assertEqual(response.status_code, 200)
         response_msg = json.loads(response.data.decode("UTF-8"))
         self.assertIn("logged out", response_msg["message"])
