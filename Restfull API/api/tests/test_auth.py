@@ -22,10 +22,12 @@ class UserAuthTestCase(unittest.TestCase):
                     data=json.dumps(dict(email="jeff@gmail.com",username="jefftest",
                                 password="jeffpass")), content_type="application/json")
 
-        self.token = self.app.post("/api/auth/login",
+        self.login = self.app.post("/api/auth/login",
                         data = json.dumps(dict(email="jeff@gmail.com",password="jeffpass")),
                                          content_type="application/json")
-        print(self.token.data)
+        self.data = json.loads(self.login.get_data(as_text=True))
+        
+        self.token = self.data['token']
 
         
 
@@ -84,7 +86,7 @@ class UserAuthTestCase(unittest.TestCase):
 
     def test_if_user_has_logged_out(self):
         """ Test API can check if user is logged out"""
-        response = self.app.get("/api/auth/logout")
+        response = self.app.get("/api/auth/logout",headers={"x-access-token": self.token})
         self.assertEqual(response.status_code, 200)
         response_msg = json.loads(response.data.decode("UTF-8"))
         self.assertIn("logged out", response_msg["message"])

@@ -41,10 +41,19 @@ class UserBusinessTestCase(unittest.TestCase):
                     data=json.dumps(dict(name="A2z ICT Company Kenya",description="We Will Do Basic Web Functionalities In Django And Flask.",
                                         location = "Nairobi")),content_type="application/json")
 
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 409)
         response_msg = json.loads(response.data.decode("UTF-8"))
         self.assertIn("already registered", response_msg["message"])
 
+    def test_user_entred_name_and_location_data(self):
+        """ Check user entred name and location to register business"""
+        response = self.app.post("/api/businesses",
+                    data=json.dumps(dict(name="",description="We Will Do Basic Web Functionalities In Django And Flask.",
+                                        location = "")),content_type="application/json")
+
+        self.assertEqual(response.status_code, 403)
+        response_msg = json.loads(response.data.decode("UTF-8"))
+        self.assertIn("business name and location", response_msg["message"])
 
     def test_user_can_get_all_businesses(self):
         """ Test user can retreave all busineses"""
@@ -77,6 +86,16 @@ class UserBusinessTestCase(unittest.TestCase):
         response_msg = json.loads(response.data.decode("UTF-8"))
         self.assertIn("Edited", response_msg["message"]) 
 
+    def test_user_edited__name_and_location_and_entred_data(self):
+        """ Check user entred name and location to register business"""
+        response = self.app.put("/api/businesses/{}".format(2),
+                    data=json.dumps(dict(name="",description="We Will Do Basic Web Functionalities In Django And Flask.",
+                                        location = "")),content_type="application/json")
+
+        self.assertEqual(response.status_code, 403)
+        response_msg = json.loads(response.data.decode("UTF-8"))
+        self.assertIn("Business name and Location", response_msg["message"])
+
     def test_if_user_can_get_business_using_ID(self):
         """Test if user can get business using Id"""
         response = self.app.get("/api/businesses/{}".format(2))
@@ -86,15 +105,14 @@ class UserBusinessTestCase(unittest.TestCase):
         self.assertIn("Here is the searched business", response_msg["message"])
 
 
-    # def test_check_if_business_is_registrerd(self):
-    #     """ Test API can check if user rejects an already registered business"""
-    #     response = self.app.post("/auth/login",
-    #                     data=json.dumps(dict(email="jeffnot@gmail.com",password="jeffpassnot")),
-    #                                      content_type="application/json")
-
-    #     self.assertEqual(response.status_code, 400)
+    # def test_check_if_only_Logged_user_can_register(self):
+    #     """ Check if user can register without logging in """
+    #     response = self.app.put("/api/businesses/{}".format(2),
+    #                       data=json.dumps(dict(name="Andela kenya", description="Here you simply own your own", 
+    #                                       location="RoySambu")), content_type="application/json")
+    #     self.assertEqual(response.status_code, 404)
     #     response_msg = json.loads(response.data.decode("UTF-8"))
-    #     self.assertIn("Not registered", response_msg["message"])         
+    #     self.assertIn("You need to log in", response_msg["message"])         
 
 
 if __name__ == "__main__":
