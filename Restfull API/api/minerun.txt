@@ -1,2 +1,6 @@
 SET FLASK_CONFIG=development
 SET FLASK_APP=run.py
+
+apiryI used to fancy myself a developer but after the two weeks in the bootcamp i realize i have a lot to learn. this means that either 
+
+The pressure is real, learning new things and implementing them although i really love that and am enjoying the experience 

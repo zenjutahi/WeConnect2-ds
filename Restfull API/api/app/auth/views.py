@@ -47,20 +47,21 @@ def register():
     data = request.get_json()
 
     if data['email'] == "" or data["password"] == "" :
-        return jsonify({'message': 'You need email and password to login'}), 403
+        return jsonify({'message': 'You need email and password to login'}), 401
 
-    """ Check if email already registred """
+    #check if email already registred 
     users_dict = User.users.items()
     existing_user = {ke:val for ke, val in users_dict if data['email'] in val['email']}
     if existing_user:
+        print(existing_user)
         return jsonify({'message':'This email is registered, login instead'}), 404
 
 
-    """ If email not registred, create user account"""
+    #If email not registred, create user account
     new_user = User(email=data['email'], username=data['username'], password=data['password'])
     new_user.create_user()
     
-    """ Give user session """
+    #give user session 
     for key, value in users_dict:     
         if data['email'] in value['email']:
             session['user_id'] = key
@@ -74,7 +75,7 @@ def register():
 def login():
     data = request.get_json()
     if data['email'] == "" or data["password"] == "":
-        return jsonify({'message': 'You need both password and username to login'}), 403
+        return jsonify({'message': 'You need both password and username to login'}), 401
 
     users_dict = User.users.items()
     existing_user = {ke:val for ke, val in users_dict if data['email'] in val['email']}
@@ -85,7 +86,7 @@ def login():
             global logged_in
             logged_in = True
 
-            """ Give user session """
+            #Give user session
             for key, value in users_dict:     
                 if data['email'] in value['email']:
                     session['user_id'] = key

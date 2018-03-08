@@ -66,18 +66,16 @@ class Business(object):
 
 class Review(object):
     """ This is a class that gives artributes to a review """
-
     review_id = 0
     reviewlist = {}
 
     def __init__(self, value, comments):
         """ constructor to initialize class """
-
         Review.review_id += 1 
         self.value = value
         self.comments = comments
 
-    def create_business(self):
+    def create_Review(self):
         """ To create and store a review """
         self.reviewlist.update({
             self.review_id: {
@@ -89,6 +87,14 @@ class Review(object):
         })
 
         return self.reviewlist
+
+    def get_Review(self, business_id):
+        """ To get review for a business"""
+        reviews = self.reviewlist.items()
+        one_review = {ke:val for ke, val in reviews if val['business_id'] == business_id}
+        all_reviews.append(one_review)
+        return all_reviews
+
 
 
     
