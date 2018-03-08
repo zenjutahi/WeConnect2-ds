@@ -1,3 +1,10 @@
+[![Coverage Status](https://coveralls.io/repos/github/zenjutahi/Weconnect/badge.svg?branch=master)](https://coveralls.io/github/zenjutahi/Weconnect?branch=master)
+
+https://coveralls.io/repos/github/zenjutahi/Weconnect/badge.svg?branch=master(Coverage Status)!:https://coveralls.io/github/zenjutahi/Weconnect?branch=master
+{<img src="https://coveralls.io/repos/github/zenjutahi/Weconnect/badge.svg?branch=master" alt="Coverage Status" />}[https://coveralls.io/github/zenjutahi/Weconnect?branch=master]
+<a href='https://coveralls.io/github/zenjutahi/Weconnect?branch=master'><img src='https://coveralls.io/repos/github/zenjutahi/Weconnect/badge.svg?branch=master' alt='Coverage Status' /></a>
+.. image:: https://coveralls.io/repos/github/zenjutahi/Weconnect/badge.svg?branch=master
+:target: https://coveralls.io/github/zenjutahi/Weconnect?branch=master
 
 
 ## Getting Started
@@ -17,16 +24,9 @@
  A platform that brings businesses and individuals together this is by creating awareness for businesses and gives the users the ability to write reviews about the businesses they have interacted with
 
 
-### Prerequisites
-
-What things you need to install the software and how to install them
+### What my app does
 
 
-Give examples
-* Python 3.6
-* Virtual environment
-* Flask
-* Pylint
 
 ### Installing
 
@@ -88,7 +88,6 @@ We use [GitHub](https://github.com/) for versioning. For the versions available,
 
 * **Jeff Mutahi** - *Initial work* - [Zenjeff](https://github.com/zenjutahi)
 
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
 
 ## License
 
