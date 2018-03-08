@@ -102,8 +102,8 @@ def login():
         return jsonify({'message': 'Not registered user'}), 400
 
 @auth.route('/logout')
-#@token_required      #current_user --- to be passed when using token
-def logout():
+@token_required      #current_user --- to be passed when using token
+def logout(current_user):
     global logged_in
     logged_in = False
 

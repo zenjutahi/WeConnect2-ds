@@ -69,18 +69,19 @@ class Review(object):
     review_id = 0
     reviewlist = {}
 
-    def __init__(self, value, comments):
+    def __init__(self, business_id, value, comments):
         """ constructor to initialize class """
         Review.review_id += 1 
         self.value = value
         self.comments = comments
+        self.business_id = business_id
 
     def create_Review(self):
         """ To create and store a review """
         self.reviewlist.update({
             self.review_id: {
-                'business_id': Business.buss_id,
-                'user_id': User.user_id,
+                'user_id': User.user_id,                
+                'business_id': self.business_id,
                 'value': self.value,
                 'comments': self.comments
                 }
@@ -88,12 +89,12 @@ class Review(object):
 
         return self.reviewlist
 
-    def get_Review(self, business_id):
-        """ To get review for a business"""
-        reviews = self.reviewlist.items()
-        one_review = {ke:val for ke, val in reviews if val['business_id'] == business_id}
-        all_reviews.append(one_review)
-        return all_reviews
+    # def get_Review(self, business_id):
+    #     """ To get review for a business"""
+    #     reviews = self.reviewlist.items()
+    #     one_review = {ke:val for ke, val in reviews if val['business_id'] == business_id}
+    #     all_reviews.append(one_review)
+    #     return all_reviews
 
 
 

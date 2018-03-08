@@ -8,10 +8,13 @@ import uuid
 import json
 from functools import wraps
 from . import business
-from ..models import User, Business
+from ..models import User, Business, Review
 
 global logged_in
 logged_in = False
+
+
+
 
 @business.route('/businesses', methods=['GET','POST'])
 def registerBusiness():
@@ -20,14 +23,14 @@ def registerBusiness():
 
         data = request.get_json()
         if True:
-            #check if user entered a name 
-            if data['name'] == "":
-                return jsonify({'message': 'You need a business name to Register'}), 403
+            #check if user entered a name and location 
+            if data['name'] == "" or data['location'] == "":
+                return jsonify({'message': 'You need a business name and location to Register'}), 403
 
             business_dict = Business.businesslist.items()
             existing_business = {ke:val for ke, val in  business_dict if data['name'] in val['name']}
             if existing_business:
-                return jsonify({'message':'This Business is already registered'}), 404
+                return jsonify({'message':'This Business is already registered'}), 409
 
             #If business not registered create one
 
@@ -39,13 +42,13 @@ def registerBusiness():
 
             return jsonify(
                 {'message':'New business has been created',
-                'businesses': current_business_id,
+                'businesses ID': current_business_id,
                 'business name': businessName
                 }), 201
 
         return jsonify({'message':'You need to log in to register a business'}), 404
 
-    """ This is to get all businesses """
+    #This get all businesses 
     all_businesses = Business.get_businesses_all()
     return jsonify({ 'message1': 'These are all the businesses',
                      'message': all_businesses
@@ -69,6 +72,8 @@ def editBusiness(buzId):
             if businessId == buzId:
                 data = request.get_json()
                 targetBusinessValues = business_dict[buzId]
+                if data['name'] == "" or data['location'] == "":
+                    return jsonify({'message': 'Business name and Location have to be entred'}), 403
                 for values in targetBusinessValues:
                     targetBusinessValues['name'] = data['name']
                     targetBusinessValues['description'] = data['description']
