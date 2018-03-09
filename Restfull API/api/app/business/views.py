@@ -8,11 +8,21 @@ import uuid
 import json
 from functools import wraps
 from . import business
+<<<<<<< HEAD
 from ..models import User, Business
+=======
+from ..models import User, Business, Review
+>>>>>>> 14c8654d6f4cba1b109a1af807d0702545858fd7
 
 global logged_in
 logged_in = False
 
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> 14c8654d6f4cba1b109a1af807d0702545858fd7
 @business.route('/businesses', methods=['GET','POST'])
 def registerBusiness():
     """ This is to register a business"""
@@ -20,14 +30,24 @@ def registerBusiness():
 
         data = request.get_json()
         if True:
+<<<<<<< HEAD
             #check if user entered a name 
             if data['name'] == "":
                 return jsonify({'message': 'You need a business name to Register'}), 403
+=======
+            #check if user entered a name and location 
+            if data['name'] == "" or data['location'] == "":
+                return jsonify({'message': 'You need a business name and location to Register'}), 403
+>>>>>>> 14c8654d6f4cba1b109a1af807d0702545858fd7
 
             business_dict = Business.businesslist.items()
             existing_business = {ke:val for ke, val in  business_dict if data['name'] in val['name']}
             if existing_business:
+<<<<<<< HEAD
                 return jsonify({'message':'This Business is already registered'}), 404
+=======
+                return jsonify({'message':'This Business is already registered'}), 409
+>>>>>>> 14c8654d6f4cba1b109a1af807d0702545858fd7
 
             #If business not registered create one
 
@@ -39,13 +59,21 @@ def registerBusiness():
 
             return jsonify(
                 {'message':'New business has been created',
+<<<<<<< HEAD
                 'businesses': current_business_id,
+=======
+                'businesses ID': current_business_id,
+>>>>>>> 14c8654d6f4cba1b109a1af807d0702545858fd7
                 'business name': businessName
                 }), 201
 
         return jsonify({'message':'You need to log in to register a business'}), 404
 
+<<<<<<< HEAD
     """ This is to get all businesses """
+=======
+    #This get all businesses 
+>>>>>>> 14c8654d6f4cba1b109a1af807d0702545858fd7
     all_businesses = Business.get_businesses_all()
     return jsonify({ 'message1': 'These are all the businesses',
                      'message': all_businesses
@@ -69,6 +97,11 @@ def editBusiness(buzId):
             if businessId == buzId:
                 data = request.get_json()
                 targetBusinessValues = business_dict[buzId]
+<<<<<<< HEAD
+=======
+                if data['name'] == "" or data['location'] == "":
+                    return jsonify({'message': 'Business name and Location have to be entred'}), 403
+>>>>>>> 14c8654d6f4cba1b109a1af807d0702545858fd7
                 for values in targetBusinessValues:
                     targetBusinessValues['name'] = data['name']
                     targetBusinessValues['description'] = data['description']
