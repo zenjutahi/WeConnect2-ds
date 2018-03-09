@@ -21,26 +21,30 @@
 
 
 ### What my app does
-
+* User can register into the app
+* User can login using the registered details
+* User can logout 
+* User can register a business
+* User can Edit and update the business
+* User can add a review
 
 
 ### Installing
 
 A step by step series of examples that tell you have to get a development env running
 
-Say what the step will be
+first step will be
+```
+install python (3.5 and above)
+
+install virtual enviroment
+
+install virtual wrapper
+
+install flask and dependancies
+
 
 ```
-Give the example
-```
-
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo
 
 ## Running the tests
 
@@ -49,17 +53,22 @@ Running Tests usin pytext
 ### Break down into end to end tests
 
 Explain what these tests test and why
-
+User Authentication test
 ```
-Give an example
+example pytest test_auth.py
+
 ```
 
 ### And coding style tests
 
-Explain what these tests test and why
+PEP 8 style 
 
 ```
-Give an example
+def long_function_name(
+        var_one, var_two, var_three,
+        var_four):
+    print(var_one)
+
 ```
 
 ## Deployment
@@ -91,7 +100,7 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Acknowledgments
 
-* John 
+* John mutuma
 * Inspiration 
 * etc
 
