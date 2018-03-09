@@ -21,7 +21,7 @@ def make_businessreview(buzId):
 
         if buzId not in businessIds or len(businessIds) == 0: 
             return jsonify({'message':'You can only review an existing business'}), 409
-        if data['value'] == "":
+        if data['value'] == "" or data['comments'] == "":
             return jsonify({'message': 'You have to enter a review value'}), 400
         new_review = Review(business_id=buzId, value=data['value'], comments=data['comments'])
         new_review.create_Review()
