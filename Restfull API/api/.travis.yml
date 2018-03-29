@@ -2,12 +2,13 @@ language: python
 python:
   - "3.5.2"
 install:
+  - pip install nose
   - pip install -r requirements.txt
   - pip install coveralls
 env:
   - DB=postgresql
 script: 
-  - nosetests --with-coverage --cover-package=src
+  - nosetests --exe -v --with-coverage --cover-package=app
   - coveralls
 after_success:
  - coveralls
