@@ -1,6 +1,7 @@
 from flask import session, request
 from werkzeug.security import generate_password_hash
 
+
 class User(object):
     """" Here i want to create a user who can login, register a business
            pass review... """
@@ -22,9 +23,9 @@ class User(object):
             self.user_id: {
                 'email': self.email,
                 'username': self.username,
-                'password':self.password
+                'password': self.password
             }
-            
+
         })
 
         return self.users
@@ -40,20 +41,20 @@ class Business(object):
     def __init__(self, name, description, location):
         """ constructor to initialize class """
 
-        Business.buss_id += 1 
+        Business.buss_id += 1
         self.name = name
         self.description = description
-        self.location = location 
+        self.location = location
 
     def create_business(self):
         """ To create and store a business """
         self.businesslist.update({
             self.buss_id: {
-                'user_id':User.user_id,
+                'user_id': User.user_id,
                 'name': self.name,
                 'description': self.description,
                 'location': self.location
-                }
+            }
         })
 
         return self.businesslist
@@ -71,7 +72,7 @@ class Review(object):
 
     def __init__(self, business_id, value, comments):
         """ constructor to initialize class """
-        Review.review_id += 1 
+        Review.review_id += 1
         self.value = value
         self.comments = comments
         self.business_id = business_id
@@ -80,11 +81,11 @@ class Review(object):
         """ To create and store a review """
         self.reviewlist.update({
             self.review_id: {
-                'user_id': User.user_id,                
+                'user_id': User.user_id,
                 'business_id': self.business_id,
                 'value': self.value,
                 'comments': self.comments
-                }
+            }
         })
 
         return self.reviewlist
@@ -95,7 +96,3 @@ class Review(object):
     #     one_review = {ke:val for ke, val in reviews if val['business_id'] == business_id}
     #     all_reviews.append(one_review)
     #     return all_reviews
-
-
-
-    
