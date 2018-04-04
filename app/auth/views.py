@@ -2,15 +2,13 @@ from flask import flash, request, session, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
-import jwt
+import jwt 
 import datetime
 import uuid
 from functools import wraps
 from . import auth
 from ..models import User
 from app import create_app
-
-
 # Set var to check user login status
 global logged_in
 logged_in = False
