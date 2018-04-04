@@ -7,7 +7,7 @@
 *.o
 *.so
 
-.vscode
+*.vscode
 
 # text editor generated
 ###############
