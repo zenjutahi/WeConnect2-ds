@@ -1,5 +1,4 @@
 [![Build Status](https://travis-ci.org/zenjutahi/Weconnect.svg?branch=master)](https://travis-ci.org/zenjutahi/Weconnect)
-
 [![Coverage Status](https://coveralls.io/repos/github/zenjutahi/Weconnect/badge.svg?branch=master)](https://coveralls.io/github/zenjutahi/Weconnect?branch=master)
 
 
