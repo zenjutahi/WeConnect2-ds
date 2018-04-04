@@ -30,7 +30,7 @@ def token_required(func):
             return jsonify({'message': 'Token is missing!'}), 401
 
         try:
-            data = jwt.decode(token, app.config['SECRET_KEY'])
+            data = jwt.decode(token, app.config['SECRET_KEY'], algorithm=['HS256'])
             users_dict = User.users.items()
             current_user = {
                 ke: val for ke,
@@ -102,7 +102,8 @@ def login():
                     session['user_id'] = key
 
             token = jwt.encode({'email': data['email'], 'exp': datetime.datetime.utcnow(
-            ) + datetime.timedelta(minutes=15)}, app.config['SECRET_KEY'])
+            ) + datetime.timedelta(minutes=15)}, app.config['SECRET_KEY'], algorithm='HS256')
+            print(token)
             return jsonify({'message': 'User valid and succesfully logged in',
                             'token': token.decode('UTF-8')}), 200
 
