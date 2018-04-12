@@ -52,14 +52,6 @@ install flask and dependancies
 
 Running Tests usin pytext
 
-### Break down into end to end tests
-
-Explain what these tests test and why
-User Authentication test
-```
-example pytest test_auth.py
-
-```
 
 ### And coding style tests
 
@@ -73,19 +65,12 @@ def long_function_name(
 
 ```
 
-## Deployment
-
-Add additional notes about how to deploy this on a live system
 
 ## Built With
 
 * [Flask](http://flask.pocoo.org/) - The web framework used
 * [Flask Restfull](https://flask-restful.readthedocs.io/en/latest/) - Used to enable API
 * [Pytest](https://docs.pytest.org/en/latest/) - framework used for testing
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
 
 ## Versioning
 
@@ -96,13 +81,7 @@ We use [GitHub](https://github.com/) for versioning. For the versions available,
 * **Jeff Mutahi** - *Initial work* - [Zenjeff](https://github.com/zenjutahi)
 
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
 ## Acknowledgments
 
 * John mutuma
-* Inspiration 
-* etc
 
