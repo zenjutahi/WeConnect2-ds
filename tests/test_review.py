@@ -42,6 +42,20 @@ class BusinessReviewTestCase(unittest.TestCase):
         response_msg = json.loads(response.data.decode("UTF-8"))
         self.assertIn("existing business", response_msg["message"])
 
+    def test_user_can_review_a_business(self):
+        """ user can only review an existing business"""
+        response = self.app.post(
+            "/api/businesses/{}/reviews".format(2),
+            data=json.dumps(
+                dict(
+                    business_id=2,
+                    value="Enjoyed working with you",
+                    comments="Quality survice and keen to detail")),
+            content_type="application/json")
+        self.assertEqual(response.status_code, 201)
+        response_msg = json.loads(response.data.decode("UTF-8"))
+        self.assertIn("successfully created a review", response_msg["message"])
+
     def test_getAllReviews_only_done_to_existing_business(self):
         """ user can only review an existing business"""
         response = self.app.get("/api/businesses/{}/reviews".format(8))

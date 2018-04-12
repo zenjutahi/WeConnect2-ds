@@ -89,6 +89,14 @@ class UserBusinessTestCase(unittest.TestCase):
         response_msg = json.loads(response.data.decode("UTF-8"))
         self.assertIn("deleted", response_msg["message"])
 
+    def test_user_can_only_access_existing_business(self):
+        """ Test user can delete business with its Id """
+        response = self.app.get("/api/businesses/{}".format(12))
+
+        self.assertEqual(response.status_code, 404)
+        response_msg = json.loads(response.data.decode("UTF-8"))
+        self.assertIn("Bussniess Id unknown", response_msg["message"])
+
     def test_user_can_edit_business_based_on_ID(self):
         """ User can edit business based on its ID"""
         initial_data = self.app.post(
