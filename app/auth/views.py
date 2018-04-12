@@ -44,7 +44,7 @@ def token_required(func):
 def register():
     data = request.get_json()
 
-    if data['email'] == "" or data["password"] == "":
+    if data['email'] == "" or data["password"] == "" or data["username"] == "":
         return jsonify(
             {'message': 'You need email and password to login'}), 401
 

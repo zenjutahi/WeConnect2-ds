@@ -135,15 +135,6 @@ class UserBusinessTestCase(unittest.TestCase):
         response_msg = json.loads(response.data.decode("UTF-8"))
         self.assertIn("Here is the searched business", response_msg["message"])
 
-    # def test_check_if_only_Logged_user_can_register(self):
-    #     """ Check if user can register without logging in """
-    #     response = self.app.put("/api/businesses/{}".format(2),
-    #                       data=json.dumps(dict(name="Andela kenya", description="Here you simply own your own",
-    #                                       location="RoySambu")), content_type="application/json")
-    #     self.assertEqual(response.status_code, 404)
-    #     response_msg = json.loads(response.data.decode("UTF-8"))
-    #     self.assertIn("You need to log in", response_msg["message"])
-
 
 if __name__ == "__main__":
     unittest.main()

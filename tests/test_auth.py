@@ -121,25 +121,25 @@ class UserAuthTestCase(unittest.TestCase):
         response_msg = json.loads(response.data.decode("UTF-8"))
         self.assertIn("logged out", response_msg["message"])
 
-    # def test_check_if_user_entered_blank_data_to_register(self):
-    #     """ Test API to check if user entered blank data"""
-    #     response = self.app.post("/api/auth/register",
-    #                     data=json.dumps(dict(email="",username="",password="")),
-    #                                      content_type="application/json")
+    def test_check_if_user_entered_blank_data_to_register(self):
+        """ Test API to check if user entered blank data"""
+        response = self.app.post("/api/auth/register",
+                        data=json.dumps(dict(email="",username="",password="")),
+                                         content_type="application/json")
 
-    #     self.assertEqual(response.status_code, 401)
-    #     response_msg = json.loads(response.data.decode("UTF-8"))
-    #     self.assertIn("need email and password", response_msg["message"])
+        self.assertEqual(response.status_code, 401)
+        response_msg = json.loads(response.data.decode("UTF-8"))
+        self.assertIn("need email and password", response_msg["message"])
 
-    # def test_check_if_user_entered_blank_data_to_login(self):
-    #     """ Test API to check if user entered blank data"""
-    #     response = self.app.post("/api/auth/login",
-    #                     data=json.dumps(dict(email="",password="")),
-    #                                      content_type="application/json")
+    def test_check_if_user_entered_blank_data_to_login(self):
+        """ Test API to check if user entered blank data"""
+        response = self.app.post("/api/auth/login",
+                        data=json.dumps(dict(email="",password="")),
+                                         content_type="application/json")
 
-    #     self.assertEqual(response.status_code, 401)
-    #     response_msg = json.loads(response.data.decode("UTF-8"))
-    #     self.assertIn("need both password and username", response_msg["message"])
+        self.assertEqual(response.status_code, 401)
+        response_msg = json.loads(response.data.decode("UTF-8"))
+        self.assertIn("need both password and username", response_msg["message"])
 
 
 if __name__ == "__main__":

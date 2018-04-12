@@ -49,21 +49,21 @@ class BusinessReviewTestCase(unittest.TestCase):
         response_msg = json.loads(response.data.decode("UTF-8"))
         self.assertIn("Enter a registred business", response_msg["message"])
 
-    # def test_check_review_input_ensure_not_null(self):
-    #     """ check user can not input null review"""
-    #     response = self.app.post("/api/businesses/{}/reviews".format(1),
-    #                 data=json.dumps(dict(business_id=1,value="",
-    #                                         comments = "")),content_type="application/json")
-    #     self.assertEqual(response.status_code, 400)
-    #     response_msg = json.loads(response.data.decode("UTF-8"))
-    #     self.assertIn("You have to enter a review value", response_msg["message"])
+    def test_check_review_input_ensure_not_null(self):
+        """ check user can not input null review"""
+        response = self.app.post("/api/businesses/{}/reviews".format(2),
+                    data=json.dumps(dict(business_id=2,value="",
+                                            comments = "")),content_type="application/json")
+        self.assertEqual(response.status_code, 400)
+        response_msg = json.loads(response.data.decode("UTF-8"))
+        self.assertIn("You have to enter a review value", response_msg["message"])
 
-    # def test_geta_all_reviews_for_a_business(self):
-    #     """ user can get all reviews to a business"""
-    #     response = self.app.get("/api/businesses/{}/reviews".format(1),)
-    #     self.assertEqual(response.status_code, 201)
-    #     response_msg = json.loads(response.data.decode("UTF-8"))
-    #     self.assertIn("reviews succesfully retreaved", response_msg["message"])
+    def test_geta_all_reviews_for_a_business(self):
+        """ user can get all reviews to a business"""
+        response = self.app.get("/api/businesses/{}/reviews".format(2),)
+        self.assertEqual(response.status_code, 201)
+        response_msg = json.loads(response.data.decode("UTF-8"))
+        self.assertIn("reviews succesfully retreaved", response_msg["message"])
 
 
 if __name__ == "__main__":
