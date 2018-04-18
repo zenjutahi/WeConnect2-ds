@@ -1,8 +1,6 @@
 {
   "tests/test_business.py::UserBusinessTestCase::test_check_if_only_Logged_user_can_register": true,
-  "tests/test_review.py::BusinessReviewTestCase::test_check_review_input_ensure_not_null": true,
   "tests/test_review.py::BusinessReviewTestCase::test_get_review_done_to_existing_business": true,
-  "tests/test_review.py::BusinessReviewTestCase::test_geta_all_reviews_for_a_business": true,
   "tests/test_review.py::BusinessReviewTestCase::test_review_get_done_to_existing_business": true,
   "tests/test_review.py::BusinessReviewTestCase::test_to_review_a_business": true
 }

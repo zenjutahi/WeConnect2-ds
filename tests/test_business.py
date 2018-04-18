@@ -4,10 +4,9 @@ import json
 import sys
 import inspect
 
-# currentdir = os.path.dirname(os.path.abspath(
-#     inspect.getfile(inspect.currentframe())))
-# parentdir = os.path.dirname(currentdir)
-# sys.path.insert(0, parentdir)
+from .data import ( business_orig_data, business_register_data,
+                     business_register_duplicate, business_data_blank, 
+                     business_edit_data)
 
 from app import create_app
 
@@ -19,25 +18,25 @@ class UserBusinessTestCase(unittest.TestCase):
     def setUp(self):
         self.app = create_app(config_name="testing")
         self.app = self.app.test_client()
-        self.app.post(
+        self.post_business_register(business_orig_data)
+
+    def post_business_register(self,data):
+        res = self.app.post(
             "/api/businesses",
-            data=json.dumps(
-                dict(
-                    name="A2z ICT Company",
-                    description="We Will Do Basic Web Functionalities In Django And Flask",
-                    location="Nairobi")),
+            data=json.dumps(data),
             content_type="application/json")
+        return res
+
+    def post_business_edit(self, data):
+        res = self.app.put(
+            "/api/businesses/{}".format(2),
+            data=json.dumps(data),
+            content_type="application/json")
+        return res
 
     def test_business_registration(self):
         """ Test API can register a a business"""
-        response = self.app.post(
-            "/api/businesses",
-            data=json.dumps(
-                dict(
-                    name="A2z ICT Company Kenya",
-                    description="We Will Do Basic Web Functionalities In Django And Flask",
-                    location="Nairobi")),
-            content_type="application/json")
+        response = self.post_business_register(business_register_data)
 
         self.assertEqual(response.status_code, 201)
         response_msg = json.loads(response.data.decode("UTF-8"))
@@ -45,14 +44,7 @@ class UserBusinessTestCase(unittest.TestCase):
 
     def test_if_business_already_registered(self):
         """ Test API can check a registered business"""
-        response = self.app.post(
-            "/api/businesses",
-            data=json.dumps(
-                dict(
-                    name="A2z ICT Company Kenya",
-                    description="We Will Do Basic Web Functionalities In Django And Flask.",
-                    location="Nairobi")),
-            content_type="application/json")
+        response = self.post_business_register(business_register_duplicate)
 
         self.assertEqual(response.status_code, 409)
         response_msg = json.loads(response.data.decode("UTF-8"))
@@ -60,14 +52,7 @@ class UserBusinessTestCase(unittest.TestCase):
 
     def test_user_entred_name_and_location_data(self):
         """ Check user entred name and location to register business"""
-        response = self.app.post(
-            "/api/businesses",
-            data=json.dumps(
-                dict(
-                    name="",
-                    description="We Will Do Basic Web Functionalities In Django And Flask.",
-                    location="")),
-            content_type="application/json")
+        response = self.post_business_register(business_data_blank)
 
         self.assertEqual(response.status_code, 403)
         response_msg = json.loads(response.data.decode("UTF-8"))
@@ -99,37 +84,15 @@ class UserBusinessTestCase(unittest.TestCase):
 
     def test_user_can_edit_business_based_on_ID(self):
         """ User can edit business based on its ID"""
-        initial_data = self.app.post(
-            "/api/businesses",
-            data=json.dumps(
-                dict(
-                    name="A2z ICT Company Kenya",
-                    description="We Will Do Basic Web Functionalities In Django And Flask.",
-                    location="Nairobi")),
-            content_type="application/json")
-        response = self.app.put(
-            "/api/businesses/{}".format(2),
-            data=json.dumps(
-                dict(
-                    name="Andela kenya",
-                    description="Here you simply own your own",
-                    location="RoySambu")),
-            content_type="application/json")
+        response = self.post_business_edit(business_edit_data)
 
         self.assertEqual(response.status_code, 201)
         response_msg = json.loads(response.data.decode("UTF-8"))
         self.assertIn("Edited", response_msg["message"])
 
-    def test_user_edited__name_and_location_and_entred_data(self):
+    def test_user_can_not_edit_with_blank_data(self):
         """ Check user entred name and location to register business"""
-        response = self.app.put(
-            "/api/businesses/{}".format(2),
-            data=json.dumps(
-                dict(
-                    name="",
-                    description="We Will Do Basic Web Functionalities In Django And Flask.",
-                    location="")),
-            content_type="application/json")
+        response = self.post_business_edit(business_data_blank)
 
         self.assertEqual(response.status_code, 403)
         response_msg = json.loads(response.data.decode("UTF-8"))

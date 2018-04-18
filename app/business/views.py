@@ -8,51 +8,54 @@ import uuid
 import json
 from functools import wraps
 from . import business
+from ..app_helper import validate_buss_data_null, check_json
 from ..models import User, Business, Review
-
-global logged_in
-logged_in = False
 
 
 @business.route('/businesses', methods=['GET', 'POST'])
 def registerBusiness():
     """ This is to register a business"""
     if request.method == 'POST':
+        if check_json():
+            data = request.get_json()
+            name = validate_buss_data_null(data['name'])
+            description = validate_buss_data_null(data['description'])
+            location = validate_buss_data_null(data['location'])
+            if True:
+                # check if user entered a name and location
+                if not location or not description or not name:
+                    return jsonify(
+                        {'message': 'You need a business name and location to Register'}), 403
 
-        data = request.get_json()
-        if True:
-            # check if user entered a name and location
-            if data['name'] == "" or data['location'] == "":
+                business_dict = Business.businesslist.items()
+                existing_business = {
+                    ke: val for ke,
+                    val in business_dict if data['name'] == val.name}
+                if existing_business:
+                    return jsonify(
+                        {'message': 'This Business is already registered'}), 409
+                # If business not registered create one
+
+                new_biz = Business(
+                    name=data['name'],
+                    description=data['description'],
+                    location=data['location'])
+                Business.create_business(new_biz)
+                # get the last businesss
+                current_business_id = ((sorted(Business.businesslist.keys()))[-1])
+                businessName = (Business.businesslist[current_business_id]).name
+
                 return jsonify(
-                    {'message': 'You need a business name and location to Register'}), 403
-
-            business_dict = Business.businesslist.items()
-            existing_business = {
-                ke: val for ke,
-                val in business_dict if data['name'] in val['name']}
-            if existing_business:
-                return jsonify(
-                    {'message': 'This Business is already registered'}), 409
-
-            # If business not registered create one
-
-            new_biz = Business(
-                name=data['name'],
-                description=data['description'],
-                location=data['location'])
-            new_biz.create_business()
-            # get the last businesss
-            current_business_id = ((sorted(Business.businesslist.keys()))[-1])
-            businessName = Business.businesslist[current_business_id]['name']
+                    {'message': 'New business has been created',
+                     'businesses ID': current_business_id,
+                     'business name': businessName
+                     }), 201
 
             return jsonify(
-                {'message': 'New business has been created',
-                 'businesses ID': current_business_id,
-                 'business name': businessName
-                 }), 201
+                {'message': 'You need to log in to register a business'}), 404
 
         return jsonify(
-            {'message': 'You need to log in to register a business'}), 404
+            {'message':'Bad Request. Request should be JSON format'}), 405
 
     # This get all businesses
     all_businesses = Business.get_businesses_all()
@@ -61,41 +64,61 @@ def registerBusiness():
                     }), 200
 
 
-@business.route('/businesses/<int:buzId>', methods=['GET', 'PUT', 'DELETE'])
-def editBusiness(buzId):
+@business.route('/businesses/<int:business_id>', methods=['GET', 'PUT', 'DELETE'])
+def editBusiness(business_id):
 
     business_dict = Business.businesslist
-    businessIds = business_dict.keys()
-    if buzId not in businessIds:
-        return jsonify({'message': 'Bussniess Id unknown'}), 404
-    if request.method == 'DELETE':
-        for businessId in businessIds:
-            if businessId == buzId:
-                del business_dict[buzId]
-                return jsonify(
-                    {'message': 'Business successfully deleted'}), 202
-    elif request.method == 'PUT':
-        for businessId in businessIds:
-            if businessId == buzId:
+    if business_dict.get(business_id):
+        target_business = business_dict[business_id]
+        if request.method == 'DELETE':
+            del business_dict[business_id]
+            return jsonify(
+                {'message': 'Business successfully deleted'}), 202
+        elif request.method == 'PUT':
+            if check_json():
                 data = request.get_json()
-                targetBusinessValues = business_dict[buzId]
-                if data['name'] == "" or data['location'] == "":
+                name = validate_buss_data_null(data['name'])
+                description = validate_buss_data_null(data['description'])
+                location = validate_buss_data_null(data['location'])
+
+                if not name or not description or not location:
                     return jsonify(
                         {'message': 'Business name and Location have to be entred'}), 403
-                for values in targetBusinessValues:
-                    targetBusinessValues['name'] = data['name']
-                    targetBusinessValues['description'] = data['description']
-                    targetBusinessValues['location'] = data['location']
-                    return jsonify({'New business': targetBusinessValues,
-                                    'message': 'Business Edited successfully'
-                                    }), 201
 
-    else:
-        for businessId in businessIds:
-            if businessId == buzId:
-                targetBusiness = business_dict[buzId]
-                return jsonify({'business': targetBusiness,
-                                'business Id': buzId,
-                                'message': 'Here is the searched business'
+                business_items = Business.businesslist.items()
+                existing_business_name = {
+                    ke: val for ke,
+                    val in business_items if data['name'] == val.name}
+                if existing_business_name:
+                    return jsonify(
+                        {'message': 'This Business is already registered'}), 409
 
-                                }), 200
+                target_business.update_business(data)
+                info = {"name": target_business.name, 
+                        "location": target_business.location,
+                        "description": target_business.description }
+                return jsonify({'New business': info ,
+                                'message': 'Business Edited successfully'
+                                }), 201
+            return jsonify(
+                {'message':'Bad Request. Request should be JSON format'}), 405
+
+        info = {"name": target_business.name, 
+                "location": target_business.location,
+                "description": target_business.description }
+
+        return jsonify({'business': info,
+                        'message': 'Here is the searched business'
+
+                        }), 200
+            # fields = ['id','name', 'description', 'location']
+            # for a_business in Business.businesslist.values():    
+            #     business_info = {}
+            #     for field in fields:
+            #         business_info[field] = getattr(a_business, field)
+            #     return jsonify({'business': business_info,
+            #                     'message': 'Here is the searched business'
+
+            #                     }), 200
+
+    return jsonify({'message': 'Bussniess Id unknown'}), 404

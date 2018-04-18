@@ -4,10 +4,7 @@ import json
 import sys
 import inspect
 
-# currentdir = os.path.dirname(os.path.abspath(
-#     inspect.getfile(inspect.currentframe())))
-# parentdir = os.path.dirname(currentdir)
-# sys.path.insert(0, parentdir)
+from .data import ( review_data, review_null_data)
 
 from app import create_app
 
@@ -19,39 +16,33 @@ class BusinessReviewTestCase(unittest.TestCase):
     def setUp(self):
         self.app = create_app(config_name="testing")
         self.app = self.app.test_client()
-        self.app.post(
-            "/api/businesses{}".format(2),
-            data=json.dumps(
-                dict(
-                    business_id=2,
-                    value="I love it",
-                    comments="I love it more")),
+
+
+    def post_review_exist(self,data):
+        res = self.app.post(
+            "/api/businesses/{}/reviews".format(2),
+            data=json.dumps(data),
             content_type="application/json")
+        return res
+
+    def post_review_non_exist(self,data):
+        res = self.app.post(
+            "/api/businesses/{}/reviews".format(8),
+            data=json.dumps(data),
+            content_type="application/json")
+        return res
 
     def test_review_can_only_be_done_to_existing_business(self):
         """ user can only review an existing business"""
-        response = self.app.post(
-            "/api/businesses/{}/reviews".format(8),
-            data=json.dumps(
-                dict(
-                    business_id=8,
-                    value="I love it",
-                    comments="I love it more")),
-            content_type="application/json")
+        response = self.post_review_non_exist(review_data)
+
         self.assertEqual(response.status_code, 409)
         response_msg = json.loads(response.data.decode("UTF-8"))
         self.assertIn("existing business", response_msg["message"])
 
     def test_user_can_review_a_business(self):
         """ user can only review an existing business"""
-        response = self.app.post(
-            "/api/businesses/{}/reviews".format(2),
-            data=json.dumps(
-                dict(
-                    business_id=2,
-                    value="Enjoyed working with you",
-                    comments="Quality survice and keen to detail")),
-            content_type="application/json")
+        response = self.post_review_exist(review_data)
         self.assertEqual(response.status_code, 201)
         response_msg = json.loads(response.data.decode("UTF-8"))
         self.assertIn("successfully created a review", response_msg["message"])
@@ -65,9 +56,7 @@ class BusinessReviewTestCase(unittest.TestCase):
 
     def test_check_review_input_ensure_not_null(self):
         """ check user can not input null review"""
-        response = self.app.post("/api/businesses/{}/reviews".format(2),
-                    data=json.dumps(dict(business_id=2,value="",
-                                            comments = "")),content_type="application/json")
+        response = self.post_review_exist(review_null_data)
         self.assertEqual(response.status_code, 400)
         response_msg = json.loads(response.data.decode("UTF-8"))
         self.assertIn("You have to enter a review value", response_msg["message"])

@@ -8,38 +8,60 @@ import uuid
 import json
 from functools import wraps
 from . import review
+from ..app_helper import validate_buss_data_null, check_json
 from ..models import User, Business, Review
 
 
-@review.route('/<int:buzId>/reviews', methods=['GET', 'POST'])
-def make_businessreview(buzId):
-    data = request.get_json()
-
+@review.route('/<int:business_id>/reviews', methods=['GET', 'POST'])
+def make_businessreview(business_id):
     business_dict = Business.businesslist
     businessIds = business_dict.keys()
     if request.method == 'POST':
+        if check_json():
+            data = request.get_json()
+            value = validate_buss_data_null(data['value'])
+            comments = validate_buss_data_null(data['comments'])
 
-        if buzId not in businessIds or len(businessIds) == 0:
-            return jsonify(
-                {'message': 'You can only review an existing business'}), 409
-        if data['value'] == "" or data['comments'] == "":
-            return jsonify(
-                {'message': 'You have to enter a review value'}), 400
-        new_review = Review(
-            business_id=buzId,
-            value=data['value'],
-            comments=data['comments'])
-        new_review.create_Review()
+            if business_id not in businessIds or len(businessIds) == 0:
+                return jsonify(
+                    {'message': 'You can only review an existing business'}), 409
+            if not value or not comments:
+                return jsonify(
+                    {'message': 'You have to enter a review value and comment'}), 400
+            new_review = Review(
+                business_id = business_id,
+                value=data['value'],
+                comments=data['comments'])
+            Review.create_Review(new_review)
+            current_review_id = ((sorted(Review.reviewlist.keys()))[-1])
+            review_value = (Review.reviewlist[current_review_id]).value
+            review_comment = (Review.reviewlist[current_review_id]).comments
 
-        return jsonify({'message': 'You have successfully created a review',
-                        'message2': Review.reviewlist}), 201
+
+            return jsonify({'message': 'You have successfully created a review',
+                            'Value': review_value,
+                            'Comments': review_comment}), 201
+
+        return jsonify(
+            {'message':'Bad Request. Request should be JSON format'}), 405
 
     # retreving a single business's reviews
-    if buzId not in businessIds or len(businessIds) == 0:
+    if business_id not in businessIds or len(businessIds) == 0:
         return jsonify({'message': 'Enter a registred business'}), 409
-    reviews = Review.reviewlist.items()
-    business_review = {
-        ke: val for ke,
-        val in reviews if val['business_id'] == buzId}
+
+    reviews = Review.reviewlist.values()
+    target_reviews = []
+    for review in reviews:
+        if review.business_id == business_id:
+            target_reviews.append(review)
+
+    reviews_info = []
+    for review in target_reviews:
+        info = {"Id": review.id,
+        "value": review.value,
+        "comments": review.comments}
+        reviews_info.append(info)     
+
+
     return jsonify({'message': 'Business reviews succesfully retreaved',
-                    'Reviews are:': business_review}), 201
+                    'Reviews are:': reviews_info}), 201

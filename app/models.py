@@ -2,6 +2,9 @@ from flask import session, request
 from werkzeug.security import generate_password_hash
 
 
+
+
+
 class User(object):
     """" Here i want to create a user who can login, register a business
            pass review... """
@@ -13,22 +16,18 @@ class User(object):
         """ Contructors to initialize class """
 
         User.user_id += 1
+        self.id = User.user_id
         self.email = email
         self.username = username
         self.password = generate_password_hash(password)
-
-    def create_user(self):
+    @classmethod
+    def create_user(cls, new_user):
         """ Class to create and store a user object """
-        self.users.update({
-            self.user_id: {
-                'email': self.email,
-                'username': self.username,
-                'password': self.password
-            }
-
+        cls.users.update({
+            new_user.id: new_user
         })
 
-        return self.users
+        return cls.users
 
 
 class Business(object):
@@ -42,27 +41,41 @@ class Business(object):
         """ constructor to initialize class """
 
         Business.buss_id += 1
+        self.id = Business.buss_id
         self.name = name
         self.description = description
         self.location = location
 
-    def create_business(self):
+    @classmethod
+    def create_business(cls, business):
         """ To create and store a business """
-        self.businesslist.update({
-            self.buss_id: {
-                'user_id': User.user_id,
-                'name': self.name,
-                'description': self.description,
-                'location': self.location
-            }
+        cls.businesslist.update({
+            business.id: business
         })
 
-        return self.businesslist
+
+        return cls.businesslist
+
+    def update_business(self, data):
+        """ Updates a business """
+        valid_fields = ['name', 'description', 'location']
+        for field in data:
+            if field in valid_fields:
+                setattr(self, field, data[field])
+
+
 
     @staticmethod
     def get_businesses_all():
         """ to get all my businesses """
-        return Business.businesslist
+        businesses = []
+        fields = ['id', 'name', 'description', 'location']
+        for business in Business.businesslist.values():
+            business_info = {}
+            for field in fields:
+                business_info[field] = getattr(business, field)
+            businesses.append(business_info)
+        return businesses
 
 
 class Review(object):
@@ -73,26 +86,16 @@ class Review(object):
     def __init__(self, business_id, value, comments):
         """ constructor to initialize class """
         Review.review_id += 1
+        self.id = Review.review_id
         self.value = value
         self.comments = comments
         self.business_id = business_id
-
-    def create_Review(self):
+        
+    @classmethod
+    def create_Review(cls, review):
         """ To create and store a review """
-        self.reviewlist.update({
-            self.review_id: {
-                'user_id': User.user_id,
-                'business_id': self.business_id,
-                'value': self.value,
-                'comments': self.comments
-            }
+        cls.reviewlist.update({ 
+            review.id : review
         })
 
-        return self.reviewlist
-
-    # def get_Review(self, business_id):
-    #     """ To get review for a business"""
-    #     reviews = self.reviewlist.items()
-    #     one_review = {ke:val for ke, val in reviews if val['business_id'] == business_id}
-    #     all_reviews.append(one_review)
-    #     return all_reviews
+        return cls.reviewlist
