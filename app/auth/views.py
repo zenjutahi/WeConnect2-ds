@@ -2,7 +2,7 @@ from flask import flash, request, session, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
-import jwt 
+import jwt
 import datetime
 import uuid
 from functools import wraps
@@ -73,7 +73,7 @@ def register():
 
         return jsonify(
                 {'message':'Invalid Email. Enter valid email to register'}), 400
-        
+
     return jsonify(
             {'message':'Bad Request. Request should be JSON format'}), 405
 
@@ -110,13 +110,13 @@ def login():
                 return jsonify({'message': 'Wrong password'}), 403
 
         else:
-            return jsonify({'message': 'Not registered user'}), 400
+            return jsonify({'message': 'Not registered email'}), 400
 
     return jsonify(
             {'message':'Bad Request. Request should be JSON format'}), 405
 
 @auth.route('/logout')
-@token_required  
+@token_required
 def logout(current_user):
 
     return jsonify({'message': 'Succesfully logged out'}), 200

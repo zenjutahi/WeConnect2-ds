@@ -1,5 +1,2 @@
-SET FLASK_CONFIG=development
-SET FLASK_APP=run.py
-
-apiry
-
+export FLASK_CONFIG=development
+export FLASK_APP=run.py

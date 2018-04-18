@@ -8,6 +8,7 @@
 *.so
 
 *.vscode
+*venv/
 
 # text editor generated
 ###############

@@ -1,12 +1,13 @@
 [![Build Status](https://travis-ci.org/zenjutahi/Weconnect.svg?branch=master)](https://travis-ci.org/zenjutahi/Weconnect)
 [![Coverage Status](https://coveralls.io/repos/github/zenjutahi/Weconnect/badge.svg?branch=master)](https://coveralls.io/github/zenjutahi/Weconnect?branch=master)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/d4c3ca112664417c83674d7b7ee61dbc)](https://www.codacy.com/app/zenjutahi/Weconnect?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=zenjutahi/Weconnect&amp;utm_campaign=Badge_Grade)
 
 
 
 
 
 ## Getting Started
-**My project is broken down into 4 parts.** 
+**My project is broken down into 4 parts.**
 * a) Starting with the User Interface designs for the web application using _Bootstrap and Css_
 * b) Second section is setting up API endpoints to access the web application using _Flask Restful API_
 * c) Third section is Securing the API endpoints and intergrating the web application with database
@@ -25,7 +26,7 @@
 ### What my app does
 * User can register into the app
 * User can login using the registered details
-* User can logout 
+* User can logout
 * User can register a business
 * User can Edit and update the business
 * User can add a review
@@ -55,7 +56,7 @@ Running Tests usin pytext
 
 ### And coding style tests
 
-PEP 8 style 
+PEP 8 style
 
 ```
 def long_function_name(
@@ -74,7 +75,7 @@ def long_function_name(
 
 ## Versioning
 
-We use [GitHub](https://github.com/) for versioning. For the versions available, see the [tags on this repository](https://github.com/zenjutahi/Weconnect/). 
+We use [GitHub](https://github.com/) for versioning. For the versions available, see the [tags on this repository](https://github.com/zenjutahi/Weconnect/).
 
 ## Authors
 
@@ -84,4 +85,3 @@ We use [GitHub](https://github.com/) for versioning. For the versions available,
 ## Acknowledgments
 
 * John mutuma
-
