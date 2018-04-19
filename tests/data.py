@@ -9,7 +9,7 @@ user_data   = dict(
 	username="jefftest",
 	password="jeffpass")
 
-user_data_blank = dict(email="",username="",password="")
+user_data_blank = dict(email="  ",username="  ",password="  ")
 
 user_login_data   = dict(
     email="jeff@gmail.com",
@@ -19,7 +19,7 @@ user_login_wrong_password = dict(
             email="jeff@gmail.com",
             password="jeffpassxxx")
 
-user_login_blank = dict(email="",password="")
+user_login_blank = dict(email=" ",password=" ")
 
 user_login_not_registred =  dict(
                    email="jeffnot@gmail.com",

@@ -2,23 +2,29 @@ from flask import flash, request, session, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
-import jwt
+from flask_jwt_extended import jwt_required
 import datetime
 import uuid
 import json
 from functools import wraps
 from . import review
-from ..app_helper import validate_buss_data_null, check_json
+from ..app_helper import validate_buss_data_null, check_json, check_blank_key
 from ..models import User, Business, Review
 
 
 @review.route('/<int:business_id>/reviews', methods=['GET', 'POST'])
+@jwt_required
 def make_businessreview(business_id):
     business_dict = Business.businesslist
     businessIds = business_dict.keys()
     if request.method == 'POST':
         if check_json():
-            data = request.get_json()
+            try:
+                required_fields = ['value', 'comments']
+                data = check_blank_key(request.get_json(), required_fields)
+            except AssertionError as err:
+                msg = err.args[0]
+                return jsonify({"message": msg})
             value = validate_buss_data_null(data['value'])
             comments = validate_buss_data_null(data['comments'])
 
@@ -60,7 +66,7 @@ def make_businessreview(business_id):
         info = {"Id": review.id,
         "value": review.value,
         "comments": review.comments}
-        reviews_info.append(info)     
+        reviews_info.append(info)
 
 
     return jsonify({'message': 'Business reviews succesfully retreaved',

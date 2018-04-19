@@ -20,7 +20,7 @@ def validate_email(email):
 def validate_auth_data_null(data):
     """Returns data if input is valid else none"""
     # data = data.decode('utf-8')
-    pattern = r'^[a-zA-Z_ ]+[\d\w]{3,}'
+    pattern = r'^[a-zA-Z_]+ ?[\d\w]{3,10}'
     match = re.search(pattern, data)
     if not match:
         return None
@@ -35,3 +35,13 @@ def validate_buss_data_null(data):
         return None
     else:
         return match
+
+# def check_blank_key(data):
+#     if data is None:
+#         return {'message':data + ' is Missing'}
+
+def check_blank_key(data, required_fields):
+    for field in required_fields:
+        if not data.get(field):
+            assert 0, field + ' is Missing'
+        return data

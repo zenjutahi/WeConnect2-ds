@@ -2,55 +2,65 @@ from flask import flash, request, session, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
-import jwt
+from flask_jwt_extended import (
+        JWTManager, jwt_required, create_access_token,
+        get_jwt_identity
+        )
 import datetime
 import uuid
 from functools import wraps
 from . import auth
 from ..models import User
-from ..app_helper import validate_auth_data_null, check_json, validate_email
+from ..app_helper import validate_auth_data_null, check_json, validate_email,check_blank_key
 from app import create_app
 
 app = create_app(config_name='development')
 
 
-def token_required(func):
-    @wraps(func)
-    def decorated(*args, **kwargs):
-        token = None
-
-        if 'x-access-token' in request.headers:
-            token = request.headers['x-access-token']
-
-        if not token:
-            return jsonify({'message': 'Token is missing!'}), 401
-
-        try:
-            data = jwt.decode(token, app.config['SECRET_KEY'], algorithm=['HS256'])
-            users_dict = User.users.items()
-            current_user = {
-                ke: val for ke,
-                val in users_dict if data['email'] in val.email}
-        except BaseException:
-            return jsonify({'message': 'Token is invalid!'}), 401
-        return func(current_user, *args, **kwargs)
-
-    return decorated
+# def token_required(func):
+#     @wraps(func)
+#     def decorated(*args, **kwargs):
+#         token = None
+#
+#         if 'x-access-token' in request.headers:
+#             token = request.headers['x-access-token']
+#
+#         if not token:
+#             return jsonify({'message': 'Token is missing!'}), 401
+#
+#         try:
+#             data = jwt.decode(token, app.config['SECRET_KEY'], algorithm=['HS256'])
+#             users_dict = User.users.items()
+#             current_user = {
+#                 ke: val for ke,
+#                 val in users_dict if data['email'] in val.email}
+#         except BaseException:
+#             return jsonify({'message': 'Token is invalid!'}), 401
+#         return func(current_user, *args, **kwargs)
+#
+#     return decorated
 
 
 @auth.route('/register', methods=['POST'])
 def register():
     #check for json
     if check_json():
-        data = request.get_json()
+        try:
+            required_fields = ['email', 'password', 'username']
+            data = check_blank_key(request.get_json(), required_fields)
+        except AssertionError as err:
+            msg = err.args[0]
+            return jsonify({"message": msg})
+
         email = validate_auth_data_null(data['email'])
         password = validate_auth_data_null(data['password'])
         username = validate_auth_data_null(data['username'])
 
+
         # check for null
         if not email or not password or not username:
             return jsonify(
-                {'message': 'You need email and password to login'}), 401
+                {'message': 'You need email, username and password to register'}), 401
         # check valid email
         if validate_email(email):
             # check if email already registred
@@ -83,7 +93,12 @@ def login():
 
     #check for json
     if check_json():
-        data = request.get_json()
+        try:
+            required_fields = ['email', 'password']
+            data = check_blank_key(request.get_json(), required_fields)
+        except AssertionError as err:
+            msg = err.args[0]
+            return jsonify({"message": msg})
         email = validate_auth_data_null(data['email'])
         password = validate_auth_data_null(data['password'])
         if not email or not password:
@@ -100,11 +115,12 @@ def login():
                     va.password, data['password'])]
             if valid_user:
                 # generate token for user
-                token = jwt.encode({'email': data['email'], 'exp': datetime.datetime.utcnow(
-                ) + datetime.timedelta(minutes=15)}, app.config['SECRET_KEY'], algorithm='HS256')
-                print(token)
+                # token = jwt.encode({'email': data['email'], 'exp': datetime.datetime.utcnow(
+                # ) + datetime.timedelta(minutes=15)}, app.config['SECRET_KEY'], algorithm='HS256')
+                # print(token)
+                access_token = create_access_token(identity=email)
                 return jsonify({'message': 'User valid and succesfully logged in',
-                                'token': token.decode('UTF-8')}), 200
+                                'token': access_token}), 200
 
             else:
                 return jsonify({'message': 'Wrong password'}), 403
@@ -116,8 +132,9 @@ def login():
             {'message':'Bad Request. Request should be JSON format'}), 405
 
 @auth.route('/logout')
-@token_required
-def logout(current_user):
+# @token_required
+@jwt_required
+def logout():
 
     return jsonify({'message': 'Succesfully logged out'}), 200
 

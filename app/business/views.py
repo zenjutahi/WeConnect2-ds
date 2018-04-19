@@ -2,22 +2,29 @@ from flask import flash, request, session, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
-import jwt
+from flask_jwt_extended import jwt_required
+
 import datetime
 import uuid
 import json
 from functools import wraps
 from . import business
-from ..app_helper import validate_buss_data_null, check_json
+from ..app_helper import validate_buss_data_null, check_json, check_blank_key
 from ..models import User, Business, Review
 
 
 @business.route('/businesses', methods=['GET', 'POST'])
+@jwt_required
 def registerBusiness():
     """ This is to register a business"""
     if request.method == 'POST':
         if check_json():
-            data = request.get_json()
+            try:
+                required_fields = ['name', 'description', 'location']
+                data = check_blank_key(request.get_json(), required_fields)
+            except AssertionError as err:
+                msg = err.args[0]
+                return jsonify({"message": msg})
             name = validate_buss_data_null(data['name'])
             description = validate_buss_data_null(data['description'])
             location = validate_buss_data_null(data['location'])
@@ -65,6 +72,7 @@ def registerBusiness():
 
 
 @business.route('/businesses/<int:business_id>', methods=['GET', 'PUT', 'DELETE'])
+@jwt_required
 def editBusiness(business_id):
 
     business_dict = Business.businesslist
@@ -76,7 +84,12 @@ def editBusiness(business_id):
                 {'message': 'Business successfully deleted'}), 202
         elif request.method == 'PUT':
             if check_json():
-                data = request.get_json()
+                try:
+                    required_fields = ['name', 'description', 'location']
+                    data = check_blank_key(request.get_json(), required_fields)
+                except AssertionError as err:
+                    msg = err.args[0]
+                    return jsonify({"message": msg})
                 name = validate_buss_data_null(data['name'])
                 description = validate_buss_data_null(data['description'])
                 location = validate_buss_data_null(data['location'])
@@ -94,7 +107,7 @@ def editBusiness(business_id):
                         {'message': 'This Business is already registered'}), 409
 
                 target_business.update_business(data)
-                info = {"name": target_business.name, 
+                info = {"name": target_business.name,
                         "location": target_business.location,
                         "description": target_business.description }
                 return jsonify({'New business': info ,
@@ -103,7 +116,7 @@ def editBusiness(business_id):
             return jsonify(
                 {'message':'Bad Request. Request should be JSON format'}), 405
 
-        info = {"name": target_business.name, 
+        info = {"name": target_business.name,
                 "location": target_business.location,
                 "description": target_business.description }
 
@@ -111,14 +124,5 @@ def editBusiness(business_id):
                         'message': 'Here is the searched business'
 
                         }), 200
-            # fields = ['id','name', 'description', 'location']
-            # for a_business in Business.businesslist.values():    
-            #     business_info = {}
-            #     for field in fields:
-            #         business_info[field] = getattr(a_business, field)
-            #     return jsonify({'business': business_info,
-            #                     'message': 'Here is the searched business'
-
-            #                     }), 200
 
     return jsonify({'message': 'Bussniess Id unknown'}), 404

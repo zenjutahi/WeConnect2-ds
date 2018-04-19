@@ -3,7 +3,7 @@ import os
 import json
 import sys
 import inspect
-from .data import ( user_data2, user_data, user_login_data, 
+from .data import ( user_data2, user_data, user_login_data,
                     user_login_wrong_password, user_login_not_registred,
                      user_data_blank, user_login_blank )
 
@@ -84,7 +84,7 @@ class UserAuthTestCase(unittest.TestCase):
         response = self.app.get(
             "/api/auth/logout",
             headers={
-                "x-access-token": self.token})
+                "Authorization": 'Bearer ' + self.token})
         self.assertEqual(response.status_code, 200)
         response_msg = json.loads(response.data.decode("UTF-8"))
         self.assertIn("logged out", response_msg["message"])
@@ -95,7 +95,7 @@ class UserAuthTestCase(unittest.TestCase):
 
         self.assertEqual(response.status_code, 401)
         response_msg = json.loads(response.data.decode("UTF-8"))
-        self.assertIn("need email and password", response_msg["message"])
+        self.assertIn("email, username and password", response_msg["message"])
 
     def test_check_if_user_entered_blank_data_to_login(self):
         """ Test API to check if user entered blank data"""
@@ -103,7 +103,7 @@ class UserAuthTestCase(unittest.TestCase):
 
         self.assertEqual(response.status_code, 401)
         response_msg = json.loads(response.data.decode("UTF-8"))
-        self.assertIn("need both password and username", response_msg["message"])
+        self.assertIn("both password and username", response_msg["message"])
 
 
 if __name__ == "__main__":

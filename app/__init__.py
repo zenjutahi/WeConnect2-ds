@@ -1,4 +1,8 @@
 from flask import Flask, Markup
+from flask_jwt_extended import (
+    JWTManager, jwt_required, create_access_token,
+    get_jwt_identity
+)
 #local imports
 from config import app_config
 # Initialize the app
@@ -19,8 +23,5 @@ def create_app(config_name):
     from .review import review as review_blueprint
     app.register_blueprint(review_blueprint, url_prefix='/api/businesses' )
 
-
+    jwt = JWTManager(app)
     return app
-
-
-
