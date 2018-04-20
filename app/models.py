@@ -29,6 +29,14 @@ class User(object):
 
         return cls.users
 
+    def update_user(self, data):
+        """ Updates a business """
+        valid_fields = ['password']
+        for field in data:
+            if field in valid_fields:
+                new_data = generate_password_hash(data[field])
+                setattr(self, field, new_data)
+
 
 class Business(object):
     """ This is a class that gives artributes such as id, name, description and location
@@ -90,11 +98,11 @@ class Review(object):
         self.value = value
         self.comments = comments
         self.business_id = business_id
-        
+
     @classmethod
     def create_Review(cls, review):
         """ To create and store a review """
-        cls.reviewlist.update({ 
+        cls.reviewlist.update({
             review.id : review
         })
 

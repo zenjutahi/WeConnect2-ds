@@ -14,31 +14,7 @@ from ..models import User
 from ..app_helper import validate_auth_data_null, check_json, validate_email,check_blank_key
 from app import create_app
 
-app = create_app(config_name='development')
-
-
-# def token_required(func):
-#     @wraps(func)
-#     def decorated(*args, **kwargs):
-#         token = None
-#
-#         if 'x-access-token' in request.headers:
-#             token = request.headers['x-access-token']
-#
-#         if not token:
-#             return jsonify({'message': 'Token is missing!'}), 401
-#
-#         try:
-#             data = jwt.decode(token, app.config['SECRET_KEY'], algorithm=['HS256'])
-#             users_dict = User.users.items()
-#             current_user = {
-#                 ke: val for ke,
-#                 val in users_dict if data['email'] in val.email}
-#         except BaseException:
-#             return jsonify({'message': 'Token is invalid!'}), 401
-#         return func(current_user, *args, **kwargs)
-#
-#     return decorated
+resettoken_store = set()
 
 
 @auth.route('/register', methods=['POST'])
@@ -67,7 +43,7 @@ def register():
             users_dict = User.users.items()
             existing_user = {
                 ke: val for ke,
-                val in users_dict if email in val.email }
+                val in users_dict if email == val.email }
             if existing_user:
                 print(existing_user)
                 return jsonify(
@@ -108,16 +84,12 @@ def login():
         users_dict = User.users.items()
         existing_user = {
             ke: val for ke,
-            val in users_dict if data['email'] in val.email}
+            val in users_dict if data['email'] == val.email}
         if existing_user:
             valid_user = [
                 va for va in existing_user.values() if check_password_hash(
                     va.password, data['password'])]
             if valid_user:
-                # generate token for user
-                # token = jwt.encode({'email': data['email'], 'exp': datetime.datetime.utcnow(
-                # ) + datetime.timedelta(minutes=15)}, app.config['SECRET_KEY'], algorithm='HS256')
-                # print(token)
                 access_token = create_access_token(identity=email)
                 return jsonify({'message': 'User valid and succesfully logged in',
                                 'token': access_token}), 200
@@ -139,6 +111,54 @@ def logout():
     return jsonify({'message': 'Succesfully logged out'}), 200
 
 
-@auth.route('/reset-password')
+@auth.route('/reset-password', methods=['POST'])
 def reset_password():
-    pass
+    if not check_json():
+        return jsonify(
+                {'message':'Bad Request. Request should be JSON format'}), 405
+    data = request.get_json()
+    email = validate_auth_data_null(data['email'])
+    if not email:
+        return jsonify(
+            {'message': 'You need your email to reset password'}), 401
+    users_dict = User.users.items()
+    existing_user = {
+        ke: val for ke,
+        val in users_dict if data['email'] == val.email}
+    if not existing_user:
+        return jsonify({'message': 'Not registered email'}), 400
+    pass_reset_token = create_access_token(identity=email)
+    resettoken_store.add(pass_reset_token)
+    return jsonify(
+            {'message': 'Use this token to reset password',
+             'reset-token': pass_reset_token}), 200
+
+
+@auth.route('/reset-password/update', methods=['POST'])
+def update_password():
+    url_access_token = request.args.get('reset-token')
+    if not check_json():
+        return jsonify(
+                {'message':'Bad Request. Request should be JSON format'}), 405
+    data = request.get_json()
+    email = validate_auth_data_null(data['email'])
+    password = validate_auth_data_null(data['password'])
+    if not password:
+        return jsonify(
+            {'message': 'You need your password'}), 401
+    if url_access_token not in resettoken_store:
+        return jsonify(
+                {'message':'You need the access token to update password'}), 405
+    all_users = User.users.values()
+    target_user = None
+    for user in all_users:
+        if user.email == data['email']:
+            target_user = user
+            break
+    if target_user:
+        target_user.update_user(data)
+        return jsonify(
+                {'message':'Password Succesfully changed'}), 201
+
+    return jsonify(
+            {'message':'Enter the email you used to reset password'}), 403
