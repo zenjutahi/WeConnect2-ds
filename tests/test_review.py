@@ -4,7 +4,7 @@ import json
 import sys
 import inspect
 
-from .data import ( review_data, review_null_data, user_login_data)
+from .my_data import ( review_data, review_null_data, user_login_data)
 
 from app import create_app
 

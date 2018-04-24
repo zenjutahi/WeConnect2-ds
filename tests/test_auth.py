@@ -3,7 +3,7 @@ import os
 import json
 import sys
 import inspect
-from .data import ( user_data2, user_data3, user_data, user_login_data,
+from .my_data import ( user_data2, user_data3, user_data, user_login_data,
                     user_login_wrong_password, user_data_key_nul_login,
                     user_login_not_registred,user_data_blank,
                     user_login_blank, user_data_key_nul_register )

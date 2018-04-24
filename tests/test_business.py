@@ -4,7 +4,7 @@ import json
 import sys
 import inspect
 
-from .data import ( business_orig_data, business_register_data,
+from .my_data import ( business_orig_data, business_register_data,
                      business_register_duplicate, business_data_blank,
                      business_edit_data, user_login_data)
 
