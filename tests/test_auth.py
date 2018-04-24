@@ -3,9 +3,9 @@ import os
 import json
 import sys
 import inspect
-from .data import ( user_data2, user_data, user_login_data,
+from .data import ( user_data2, user_data3, user_data, user_login_data,
                     user_login_wrong_password, user_login_not_registred,
-                     user_data_blank, user_login_blank )
+                     user_data_blank, user_login_blank, user_data_key_nul )
 
 from app import create_app
 
@@ -31,11 +31,25 @@ class UserAuthTestCase(unittest.TestCase):
             content_type="application/json")
         return res
 
+    def post_none_json_data_register(self,data):
+        res = self.app.post(
+            "/api/auth/register",
+            data=json.dumps(data),
+            content_type="text/plain")
+        return res
+
     def post_data_login(self, data):
         res = self.app.post(
             "/api/auth/login",
             data=json.dumps(data),
             content_type="application/json")
+        return res
+
+    def post_non_json_data_login(self, data):
+        res = self.app.post(
+            "/api/auth/login",
+            data=json.dumps(data),
+            content_type="text/plain")
         return res
 
 
@@ -47,13 +61,37 @@ class UserAuthTestCase(unittest.TestCase):
         response_msg = json.loads(response.data.decode("UTF-8"))
         self.assertIn("created", response_msg["message"])
 
+    # def test_user_filled_all_required_keys(self):
+    #     """ Test API ensures user filled required keys"""
+    #     response = self.post_data_register(user_data_key_nul)
+    #
+    #     self.assertEqual(response.status_code, 500)
+    #     response_msg = json.loads(response.data.decode("UTF-8"))
+    #     self.assertIn("is Missing", response_msg["message"])
+
+    def test_user_registration_data_is_json(self):
+        """ Test API can only accept json data"""
+        response = self.post_none_json_data_register(user_data2)
+
+        self.assertEqual(response.status_code, 405)
+        response_msg = json.loads(response.data.decode("UTF-8"))
+        self.assertIn("Request should be JSON format", response_msg["message"])
+
+    def test_user_used_valid_email(self):
+        """ Test API checks for valid email"""
+        response = self.post_data_register(user_data3)
+
+        self.assertEqual(response.status_code, 400)
+        response_msg = json.loads(response.data.decode("UTF-8"))
+        self.assertIn("Enter valid email to register", response_msg["message"])
+
     def test_user_already_registered(self):
         """ Test API can check a registered user"""
         response = self.post_data_register(user_data)
 
         self.assertEqual(response.status_code, 404)
         response_msg = json.loads(response.data.decode("UTF-8"))
-        self.assertIn("instead", response_msg["message"])
+        self.assertIn("login instead", response_msg["message"])
 
     def test_user_login(self):
         """ Test API can login a user"""
@@ -62,6 +100,14 @@ class UserAuthTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         response_msg = json.loads(response.data.decode("UTF-8"))
         self.assertIn("valid", response_msg["message"])
+
+    def test_user_login_with_json_data(self):
+        """ Test API checks user json data"""
+        response = self.post_non_json_data_login(user_login_data)
+
+        self.assertEqual(response.status_code, 405)
+        response_msg = json.loads(response.data.decode("UTF-8"))
+        self.assertIn("Request should be JSON format", response_msg["message"])
 
     def test_user_login_with_wrong_password(self):
         """ Test API can check if user used wrong password"""

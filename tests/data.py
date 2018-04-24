@@ -4,10 +4,19 @@ user_data2 = dict(
     username="jefftest2",
     password="jeffpass2")
 
+user_data3 = dict(
+    email="jeff2gmailcom",
+    username="jefftest2",
+    password="jeffpass2")
+
 user_data   = dict(
 	email="jeff@gmail.com",
 	username="jefftest",
 	password="jeffpass")
+
+user_data_key_nul  = dict(
+	email="jeff@gmail.com",
+	username="jefftest")
 
 user_data_blank = dict(email="  ",username="  ",password="  ")
 
