@@ -1,22 +1,22 @@
 
 user_data2 = dict(
     email="jeff2@gmail.com",
-    username="jefftest2",
-    password="jeff1234")
+    username="Zenjeff",
+    password="muta1234")
 
 user_data3 = dict(
     email="jeff2gmailcom",
-    username="jefftest2",
-    password="jeff1234")
+    username="Zenjeff",
+    password="muta1234")
 
 user_data   = dict(
 	email="jeff@gmail.com",
-	username="jefftest",
-	password="jeff123")
+	username="Zenjeff",
+	password="muta123")
 
 user_data_key_nul_register = dict(
 	email="jeff@gmail.com",
-	username="jefftest")
+	username="Zenjest")
 
 user_data_key_nul_login   = dict(
 	email="jeff@gmail.com")
@@ -25,17 +25,17 @@ user_data_blank = dict(email="  ",username="  ",password="  ")
 
 user_login_data   = dict(
     email="jeff@gmail.com",
-    password="jeff123")
+    password="muta123")
 
 user_login_wrong_password = dict(
             email="jeff@gmail.com",
-            password="jeff123xxx")
+            password="muta123xxx")
 
 user_login_blank = dict(email=" ",password=" ")
 
 user_login_not_registred =  dict(
                    email="jeffnot@gmail.com",
-                    password="jeffnotme")
+                    password="mutanotme")
 
 
 business_orig_data =  dict(
