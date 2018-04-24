@@ -35,7 +35,7 @@ user_login_blank = dict(email=" ",password=" ")
 
 user_login_not_registred =  dict(
                    email="jeffnot@gmail.com",
-                    password="jeffpassnot")
+                    password="jeffnotme")
 
 
 business_orig_data =  dict(
@@ -68,5 +68,5 @@ review_data =                 dict(
                     comments="I love it more")
 
 review_null_data =                 dict(
-                    value="  ",
-                    comments="  ")
+                    value="   ",
+                    comments="   ")
