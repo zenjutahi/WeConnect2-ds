@@ -21,6 +21,7 @@ def register():
     if not check_json():
         return jsonify(
                 {'message':'Bad Request. Request should be JSON format'}), 405
+
     # Check for blank key
     try:
         required_fields = ['email', 'password', 'username']

@@ -14,10 +14,13 @@ user_data   = dict(
 	username="jefftest",
 	password="jeffpass")
 
-user_data_key_nul  = dict(
+user_data_key_nul_register = dict(
 	email="jeff@gmail.com",
 	username="jefftest")
 
+user_data_key_nul_login   = dict(
+	email="jeff@gmail.com")
+    
 user_data_blank = dict(email="  ",username="  ",password="  ")
 
 user_login_data   = dict(
