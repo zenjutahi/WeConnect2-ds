@@ -98,7 +98,7 @@ class UserBusinessTestCase(unittest.TestCase):
 
         self.assertEqual(response.status_code, 404)
         response_msg = json.loads(response.data.decode("UTF-8"))
-        self.assertIn("Bussniess Id unknown", response_msg["message"])
+        self.assertIn("Bussniess does not exist", response_msg["message"])
 
     def test_user_can_edit_business_based_on_ID(self):
         """ User can edit business based on its ID"""
@@ -106,7 +106,7 @@ class UserBusinessTestCase(unittest.TestCase):
 
         self.assertEqual(response.status_code, 201)
         response_msg = json.loads(response.data.decode("UTF-8"))
-        self.assertIn("Edited", response_msg["message"])
+        self.assertIn("edited", response_msg["message"])
 
     def test_user_can_not_edit_with_blank_data(self):
         """ Check user entred name and location to register business"""
