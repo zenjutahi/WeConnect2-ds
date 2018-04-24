@@ -45,7 +45,7 @@ class Business(object):
     buss_id = 0
     businesslist = {}
 
-    def __init__(self, name, description, location):
+    def __init__(self, name, description, location, user_id):
         """ constructor to initialize class """
 
         Business.buss_id += 1
@@ -53,6 +53,7 @@ class Business(object):
         self.name = name
         self.description = description
         self.location = location
+        self.user_id = user_id
 
     @classmethod
     def create_business(cls, business):

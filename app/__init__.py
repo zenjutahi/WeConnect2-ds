@@ -1,12 +1,13 @@
-from flask import Flask, Markup
+from flask import Flask
 from flask_jwt_extended import (
     JWTManager, jwt_required, create_access_token,
     get_jwt_identity
 )
 #local imports
 from config import app_config
-# Initialize the app
 
+
+# Initialize the app
 def create_app(config_name):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(app_config[config_name])
@@ -29,6 +30,6 @@ def create_app(config_name):
     #     jti = decrypted_token['jti']
     #     return jti in resettoken_store
 
-    
+
     jwt = JWTManager(app)
     return app

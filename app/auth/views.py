@@ -1,14 +1,12 @@
-from flask import flash, request, session, jsonify
+from flask import request, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
-
-
 from flask_jwt_extended import (
         JWTManager, jwt_required, create_access_token,
         get_jwt_identity
         )
 import datetime
-import uuid
-from functools import wraps
+# import uuid
+# from functools import wraps
 from . import auth
 from ..models import User
 from ..app_helper import validate_auth_data_null, check_json, validate_email,check_blank_key
@@ -19,92 +17,91 @@ resettoken_store = set()
 
 @auth.route('/register', methods=['POST'])
 def register():
-    #check for json
-    if check_json():
-        try:
-            required_fields = ['email', 'password', 'username']
-            data = check_blank_key(request.get_json(), required_fields)
-        except AssertionError as err:
-            msg = err.args[0]
-            return jsonify({"message": msg})
-
-        email = validate_auth_data_null(data['email'])
-        password = validate_auth_data_null(data['password'])
-        username = validate_auth_data_null(data['username'])
-
-
-        # check for null
-        if not email or not password or not username:
-            return jsonify(
-                {'message': 'You need email, username and password to register'}), 401
-        # check valid email
-        if validate_email(email):
-            # check if email already registred
-            users_dict = User.users.items()
-            existing_user = {
-                ke: val for ke,
-                val in users_dict if email == val.email }
-            if existing_user:
-                print(existing_user)
-                return jsonify(
-                    {'message': 'This email is registered, login instead'}), 404
-
-            # If email not registred, create user account
-            new_user = User(
-                email=data['email'],
-                username=data['username'],
-                password=data['password'])
-            User.create_user(new_user)
-            return jsonify({'message': 'New user Succesfully created'}), 201
-
+    # Check for json
+    if not check_json():
+        return jsonify(
+                {'message':'Bad Request. Request should be JSON format'}), 405
+    # Check for blank key
+    try:
+        required_fields = ['email', 'password', 'username']
+        data = check_blank_key(request.get_json(), required_fields)
+    except AssertionError as err:
+        msg = err.args[0]
+        return jsonify({"message": msg})
+    # Check for null in user data
+    email = validate_auth_data_null(data['email'])
+    password = validate_auth_data_null(data['password'])
+    username = validate_auth_data_null(data['username'])
+    if not email or not password or not username:
+        return jsonify(
+            {'message': 'You need email, username and password to register'}), 401
+    # Check valid email
+    if not validate_email(email):
         return jsonify(
                 {'message':'Invalid Email. Enter valid email to register'}), 400
+    # Check if email already registred
+    users_dict = User.users.items()
+    existing_user = {
+        ke: val for ke,
+        val in users_dict if email == val.email }
+    if existing_user:
+        print(existing_user)
+        return jsonify(
+            {'message': 'This email is registered, login instead'}), 404
 
-    return jsonify(
-            {'message':'Bad Request. Request should be JSON format'}), 405
+    # If email not registred, create user account
+    new_user = User(
+        email=data['email'],
+        username=data['username'],
+        password=data['password'])
+    User.create_user(new_user)
+    return jsonify({'message': 'New user Succesfully created'}), 201
+
+
+
 
 
 @auth.route('/login', methods=['POST'])
 def login():
 
-    #check for json
-    if check_json():
-        try:
-            required_fields = ['email', 'password']
-            data = check_blank_key(request.get_json(), required_fields)
-        except AssertionError as err:
-            msg = err.args[0]
-            return jsonify({"message": msg})
-        email = validate_auth_data_null(data['email'])
-        password = validate_auth_data_null(data['password'])
-        if not email or not password:
-            return jsonify(
-                {'message': 'You need both password and username to login'}), 401
+    # Check for json
+    if not check_json():
+        return jsonify(
+                {'message':'Bad Request. Request should be JSON format'}), 405
+    # Check for blank key
+    try:
+        required_fields = ['email', 'password']
+        data = check_blank_key(request.get_json(), required_fields)
+    except AssertionError as err:
+        msg = err.args[0]
+        return jsonify({"message": msg})
+    # Check for null in user data
+    email = validate_auth_data_null(data['email'])
+    password = validate_auth_data_null(data['password'])
+    if not email or not password:
+        return jsonify(
+            {'message': 'You need both password and username to login'}), 401
+    # Ensure user exists
+    users_dict = User.users.items()
+    existing_user = {
+        ke: val for ke,
+        val in users_dict if data['email'] == val.email}
+    if not existing_user:
+        return jsonify({'message': 'Not registered email'}), 400
+    # Validate login data
+    valid_user = [
+        va for va in existing_user.values() if check_password_hash(
+            va.password, data['password'])]
+    if not valid_user:
+        return jsonify({'message': 'Wrong password'}), 403
+    # If valid login user
+    access_token = create_access_token(identity=email)
+    return jsonify({'message': 'User valid and succesfully logged in',
+                    'token': access_token}), 200
 
-        users_dict = User.users.items()
-        existing_user = {
-            ke: val for ke,
-            val in users_dict if data['email'] == val.email}
-        if existing_user:
-            valid_user = [
-                va for va in existing_user.values() if check_password_hash(
-                    va.password, data['password'])]
-            if valid_user:
-                access_token = create_access_token(identity=email)
-                return jsonify({'message': 'User valid and succesfully logged in',
-                                'token': access_token}), 200
 
-            else:
-                return jsonify({'message': 'Wrong password'}), 403
-
-        else:
-            return jsonify({'message': 'Not registered email'}), 400
-
-    return jsonify(
-            {'message':'Bad Request. Request should be JSON format'}), 405
 
 @auth.route('/logout')
-# @token_required
 @jwt_required
 def logout():
 
