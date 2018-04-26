@@ -41,7 +41,7 @@ def registerBusiness():
         business_dict = Business.businesslist.items()
         existing_business = {
             ke: val for ke,
-            val in business_dict if data['name'] == val.name}
+            val in business_dict if data['name'].lower() == val.name.lower()}
         if existing_business:
             return jsonify(
                 {'message': 'This Business is already registered'}), 409

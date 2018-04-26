@@ -1,6 +1,5 @@
 import datetime
 import re, uuid
-from flask_jwt_extended import JWTManager
 from flask import request, jsonify
 
 

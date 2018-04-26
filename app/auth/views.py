@@ -2,7 +2,7 @@ from flask import request, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import (
         JWTManager, jwt_required, create_access_token,
-        get_jwt_identity
+        get_jwt_identity, get_raw_jwt
         )
 import datetime
 # import uuid
@@ -13,6 +13,7 @@ from ..app_helper import validate_auth_data_null, check_json, validate_email,che
 from app import create_app
 
 resettoken_store = set()
+blacklist = set()
 
 
 @auth.route('/register', methods=['POST'])
@@ -44,7 +45,7 @@ def register():
     users_dict = User.users.items()
     existing_user = {
         ke: val for ke,
-        val in users_dict if email == val.email }
+        val in users_dict if email.lower() == val.email.lower() }
     if existing_user:
         print(existing_user)
         return jsonify(
@@ -96,16 +97,18 @@ def login():
     if not valid_user:
         return jsonify({'message': 'Wrong password'}), 403
     # If valid login user
-    access_token = create_access_token(identity=email)
+    expires=datetime.timedelta(minutes=10)
+    access_token = create_access_token(identity=email,expires_delta=expires)
     return jsonify({'message': 'User valid and succesfully logged in',
                     'token': access_token}), 200
 
 
 
-@auth.route('/logout')
+@auth.route('/logout', methods=['DELETE'])
 @jwt_required
 def logout():
-
+    jti = get_raw_jwt()['jti']
+    blacklist.add(jti)
     return jsonify({'message': 'Succesfully logged out'}), 200
 
 
