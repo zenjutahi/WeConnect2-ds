@@ -27,6 +27,10 @@ user_login_data   = dict(
     email="jeff@gmail.com",
     password="muta123")
 
+user_login_data2   = dict(
+    email="jeff2@gmail.com",
+    password="muta1234")
+
 user_login_wrong_password = dict(
             email="jeff@gmail.com",
             password="muta123xxx")
