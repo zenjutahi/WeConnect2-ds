@@ -142,8 +142,16 @@ class UserAuthTestCase(unittest.TestCase):
         response_msg = json.loads(response.data.decode("UTF-8"))
         self.assertIn("You need the access token to update password", response_msg["message"])
 
+    def test_user_needs_newpassword_to_change_password(self):
+        """ Test API enables user to update password"""
+        response = self.post_data_password_update(user_login_blank)
+
+        self.assertEqual(response.status_code, 401)
+        response_msg = json.loads(response.data.decode("UTF-8"))
+        self.assertIn("You need your password", response_msg["message"])
+
     def test_user_already_registered(self):
-        """ Test API can check a registered user"""
+        """ Test API can check a registered user """
         response = self.post_data_register(user_data)
 
         self.assertEqual(response.status_code, 404)
