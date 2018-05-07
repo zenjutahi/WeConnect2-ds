@@ -136,13 +136,14 @@ def reset_password():
 
 
 @auth.route('/reset-password/update', methods=['POST'])
+@jwt_required
 def update_password():
     url_access_token = request.args.get('reset-token')
     if not check_json():
         return jsonify(
                 {'message':'Bad Request. Request should be JSON format'}), 405
     data = request.get_json()
-    email = validate_auth_data_null(data['email'])
+    # email = validate_auth_data_null(data['email'])
     password = validate_auth_data_null(data['password'])
     if not password:
         return jsonify(
@@ -153,7 +154,7 @@ def update_password():
     all_users = User.users.values()
     target_user = None
     for user in all_users:
-        if user.email == data['email']:
+        if user.email == get_jwt_identity():
             target_user = user
             break
     if target_user:
@@ -162,4 +163,4 @@ def update_password():
                 {'message':'Password Succesfully changed'}), 201
 
     return jsonify(
-            {'message':'Enter the email you used to reset password'}), 403
+            {'message':'User does not exist'}), 403

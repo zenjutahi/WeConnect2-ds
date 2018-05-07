@@ -23,6 +23,18 @@ user_data_key_nul_login   = dict(
 
 user_data_blank = dict(email="  ",username="  ",password="  ")
 
+update_password_data = dict(
+  password= "muta123"
+)
+
+reset_password_data = dict(
+  email= "jeff@gmail.com"
+)
+
+reset_password_data_wrong = dict(
+  email= "jeff22@gmail.com"
+)
+
 user_login_data   = dict(
     email="jeff@gmail.com",
     password="muta123")
