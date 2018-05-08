@@ -1,3 +1,4 @@
+import os
 from flask import Flask
 import datetime
 from flask_jwt_extended import (
@@ -34,3 +35,8 @@ def create_app(config_name):
         return jti in blacklist
 
     return app
+
+
+
+config_name = os.getenv('FLASK_CONFIG')
+app = create_app(config_name)
