@@ -63,10 +63,6 @@ def registerBusiness():
              'user': current_user
              }), 201
 
-        # return jsonify(
-        #     {'message': 'You need to log in to register a business'}), 404
-
-
     # Get all businesses
     all_businesses = Business.get_businesses_all()
     return jsonify({'message1': 'These are all the businesses',
