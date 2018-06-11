@@ -4,7 +4,7 @@ import json
 import sys
 import inspect
 
-from .data import ( review_data, review_null_data, user_login_data)
+from .my_data import ( review_data, review_null_data, user_login_data, user_login_data2)
 
 from app import create_app
 
@@ -17,8 +17,12 @@ class BusinessReviewTestCase(unittest.TestCase):
         self.app = create_app(config_name="testing")
         self.app = self.app.test_client()
         self.login = self.post_data_login(user_login_data)
+        self.login2 = self.post_data_login(user_login_data2)
         self.data = json.loads(self.login.get_data(as_text=True))
 
+        self.data2= json.loads(self.login2.get_data(as_text=True))
+
+        self.token2 = self.data2['token']
         self.token = self.data['token']
 
     def post_review_exist(self,data):
@@ -27,6 +31,14 @@ class BusinessReviewTestCase(unittest.TestCase):
             data=json.dumps(data),headers= {
                 "Content-Type": "application/json",
                 "Authorization": 'Bearer ' + self.token})
+        return res
+
+    def post_review(self,data):
+        res = self.app.post(
+            "/api/businesses/{}/reviews".format(2),
+            data=json.dumps(data),headers= {
+                "Content-Type": "application/json",
+                "Authorization": 'Bearer ' + self.token2})
         return res
 
     def post_review_non_exist(self,data):
@@ -54,7 +66,7 @@ class BusinessReviewTestCase(unittest.TestCase):
 
     def test_user_can_review_a_business(self):
         """ user can only review an existing business"""
-        response = self.post_review_exist(review_data)
+        response = self.post_review(review_data)
         self.assertEqual(response.status_code, 201)
         response_msg = json.loads(response.data.decode("UTF-8"))
         self.assertIn("successfully created a review", response_msg["message"])
@@ -67,9 +79,16 @@ class BusinessReviewTestCase(unittest.TestCase):
         response_msg = json.loads(response.data.decode("UTF-8"))
         self.assertIn("Enter a registred business", response_msg["message"])
 
+    def test_check_user_can_not_review_own_business(self):
+        """ check user can not review their own business"""
+        response = self.post_review_exist(review_data)
+        self.assertEqual(response.status_code, 403)
+        response_msg = json.loads(response.data.decode("UTF-8"))
+        self.assertIn("can not review your own business", response_msg["message"])
+
     def test_check_review_input_ensure_not_null(self):
         """ check user can not input null review"""
-        response = self.post_review_exist(review_null_data)
+        response = self.post_review(review_null_data)
         self.assertEqual(response.status_code, 400)
         response_msg = json.loads(response.data.decode("UTF-8"))
         self.assertIn("You have to enter a review value", response_msg["message"])

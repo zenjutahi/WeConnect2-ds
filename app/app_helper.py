@@ -1,6 +1,5 @@
 import datetime
 import re, uuid
-from flask_jwt_extended import JWTManager
 from flask import request, jsonify
 
 
@@ -41,7 +40,8 @@ def validate_buss_data_null(data):
 
 
 def check_blank_key(data, required_fields):
+
     for field in required_fields:
         if not data.get(field):
             assert 0, field + ' is Missing'
-        return data
+    return data

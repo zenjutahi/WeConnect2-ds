@@ -2,7 +2,7 @@ from flask import request, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import (
         JWTManager, jwt_required, create_access_token,
-        get_jwt_identity
+        get_jwt_identity, get_raw_jwt
         )
 import datetime
 # import uuid
@@ -13,6 +13,7 @@ from ..app_helper import validate_auth_data_null, check_json, validate_email,che
 from app import create_app
 
 resettoken_store = set()
+blacklist = set()
 
 
 @auth.route('/register', methods=['POST'])
@@ -21,6 +22,7 @@ def register():
     if not check_json():
         return jsonify(
                 {'message':'Bad Request. Request should be JSON format'}), 405
+
     # Check for blank key
     try:
         required_fields = ['email', 'password', 'username']
@@ -43,7 +45,7 @@ def register():
     users_dict = User.users.items()
     existing_user = {
         ke: val for ke,
-        val in users_dict if email == val.email }
+        val in users_dict if email.lower() == val.email.lower() }
     if existing_user:
         print(existing_user)
         return jsonify(
@@ -95,16 +97,18 @@ def login():
     if not valid_user:
         return jsonify({'message': 'Wrong password'}), 403
     # If valid login user
-    access_token = create_access_token(identity=email)
+    expires=datetime.timedelta(minutes=10)
+    access_token = create_access_token(identity=email,expires_delta=expires)
     return jsonify({'message': 'User valid and succesfully logged in',
                     'token': access_token}), 200
 
 
 
-@auth.route('/logout')
+@auth.route('/logout') #, methods=['DELETE']
 @jwt_required
 def logout():
-
+    jti = get_raw_jwt()['jti']
+    blacklist.add(jti)
     return jsonify({'message': 'Succesfully logged out'}), 200
 
 
@@ -132,13 +136,14 @@ def reset_password():
 
 
 @auth.route('/reset-password/update', methods=['POST'])
+@jwt_required
 def update_password():
     url_access_token = request.args.get('reset-token')
     if not check_json():
         return jsonify(
                 {'message':'Bad Request. Request should be JSON format'}), 405
     data = request.get_json()
-    email = validate_auth_data_null(data['email'])
+    # email = validate_auth_data_null(data['email'])
     password = validate_auth_data_null(data['password'])
     if not password:
         return jsonify(
@@ -149,7 +154,7 @@ def update_password():
     all_users = User.users.values()
     target_user = None
     for user in all_users:
-        if user.email == data['email']:
+        if user.email == get_jwt_identity():
             target_user = user
             break
     if target_user:
@@ -158,4 +163,4 @@ def update_password():
                 {'message':'Password Succesfully changed'}), 201
 
     return jsonify(
-            {'message':'Enter the email you used to reset password'}), 403
+            {'message':'User does not exist'}), 403

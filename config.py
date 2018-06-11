@@ -2,7 +2,7 @@ class Config(object):
     """
     Common configurations
     """
-
+    JWT_BLACKLIST_ENABLED = True
     # Put any configurations here that are common across all environments
     
 

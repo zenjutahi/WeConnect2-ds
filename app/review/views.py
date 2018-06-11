@@ -2,7 +2,7 @@ from flask import flash, request, session, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 import datetime
 import uuid
 import json
@@ -15,6 +15,7 @@ from ..models import User, Business, Review
 @review.route('/<int:business_id>/reviews', methods=['GET', 'POST'])
 @jwt_required
 def make_businessreview(business_id):
+    current_user = get_jwt_identity()
     business_dict = Business.businesslist
     businessIds = business_dict.keys()
     if request.method == 'POST':
@@ -31,6 +32,9 @@ def make_businessreview(business_id):
             if business_id not in businessIds or len(businessIds) == 0:
                 return jsonify(
                     {'message': 'You can only review an existing business'}), 409
+            target_business = business_dict[business_id]
+            if current_user == target_business.user_id:
+                return jsonify({'message': 'You can not review your own business'}), 403
             if not value or not comments:
                 return jsonify(
                     {'message': 'You have to enter a review value and comment'}), 400

@@ -41,7 +41,7 @@ def registerBusiness():
         business_dict = Business.businesslist.items()
         existing_business = {
             ke: val for ke,
-            val in business_dict if data['name'] == val.name}
+            val in business_dict if data['name'].lower() == val.name.lower()}
         if existing_business:
             return jsonify(
                 {'message': 'This Business is already registered'}), 409
@@ -62,10 +62,6 @@ def registerBusiness():
              'business name': businessName,
              'user': current_user
              }), 201
-
-        # return jsonify(
-        #     {'message': 'You need to log in to register a business'}), 404
-
 
     # Get all businesses
     all_businesses = Business.get_businesses_all()
