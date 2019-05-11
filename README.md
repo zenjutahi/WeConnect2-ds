@@ -1,3 +1,4 @@
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/ac8f1e38c6cd444db251d8440e1d0f5c)](https://app.codacy.com/app/zenjutahi/Weconnect?utm_source=github.com&utm_medium=referral&utm_content=zenjutahi/Weconnect&utm_campaign=badger)
 [![Build Status](https://travis-ci.org/zenjutahi/Weconnect.svg?branch=master)](https://travis-ci.org/zenjutahi/Weconnect)
 [![Coverage Status](https://coveralls.io/repos/github/zenjutahi/Weconnect/badge.svg?branch=feedback)](https://coveralls.io/github/zenjutahi/Weconnect?branch=feedback)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/d4c3ca112664417c83674d7b7ee61dbc)](https://www.codacy.com/app/zenjutahi/Weconnect?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=zenjutahi/Weconnect&amp;utm_campaign=Badge_Grade)
